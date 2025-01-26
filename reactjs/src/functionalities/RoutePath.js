@@ -1,0 +1,18 @@
+export class RoutePath {
+    static RootPath = '/'
+    static Login = '/login'
+    static Register = '/register'
+    static Dashi = '/dashi'
+    static Expense = '/expense'
+    static Income = '/income'
+    static Dues = '/dues'
+    static Returns = '/returns'
+    static CreditCard = '/card/credit'
+    static IndividualExpenseReport = '/expense/report/individual'
+    static IndividualIncomeReport = '/income/report/individual'
+    static TransferReport = '/transfer/report/individual'
+    static Tally = '/tally'
+    static PlanBudget = '/budget/plan'
+    static ReviewBudget = '/budget/review'
+    static Logout = '/logout'
+}
