@@ -1,0 +1,33 @@
+services:
+    app:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        container_name: laravel_app
+        restart: unless-stopped
+        working_dir: /var/www
+        volumes:
+            - .:/var/www
+            - /var/www/data/4488232f8e316cfec6286760160c714f.db:/var/www/db/4488232f8e316cfec6286760160c714f.db
+        networks:
+            - laravel
+
+    nginx:
+        image: nginx:latest
+        container_name: laravel_nginx
+        restart: unless-stopped
+        ports:
+            - "80:80"
+        volumes:
+            - .:/var/www
+            - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+            - /var/www/data/4488232f8e316cfec6286760160c714f.db:/var/www/db/4488232f8e316cfec6286760160c714f.db
+        networks:
+            - laravel
+        depends_on:
+            - app
+
+
+networks:
+    laravel:
+        driver: bridge

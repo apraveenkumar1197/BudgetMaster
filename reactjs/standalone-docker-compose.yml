@@ -1,0 +1,11 @@
+version: "3.8"
+
+services:
+  git_cloner:
+    image: alpine/git
+    container_name: git_cloner
+    ports:
+      - "4383:80"
+    volumes:
+      - ./cloned-repo:/repo
+    #entrypoint: sh -c "git clone https://github.com/octocat/Hello-World.git /repo && cd /repo && ls -la && echo 'Done cloning'"

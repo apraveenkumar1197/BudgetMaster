@@ -1,0 +1,11 @@
+services:
+  react-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "4383:80"
+    restart: always
+    volumes:
+      - ./src:/app/src
+      - /app/node_modules

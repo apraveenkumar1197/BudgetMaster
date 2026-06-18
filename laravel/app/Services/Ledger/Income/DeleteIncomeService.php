@@ -1,0 +1,24 @@
+<?php
+
+namespace App\Services\Ledger\Income;
+
+use App\Enum\HttpStatus;
+use App\Models\Sqlite\Ledger;
+use App\Services\Ledger\DeleteLedgerService;
+use App\Services\ServiceResponse;
+use Exception;
+
+class DeleteIncomeService {
+
+    private $id;
+
+    function __construct($id)
+    {
+        $this->id = $id;
+    }
+
+    function delete()
+    {
+        return (new DeleteLedgerService($this->id))->delete();
+    }
+}
