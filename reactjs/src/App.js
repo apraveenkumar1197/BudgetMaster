@@ -7,6 +7,9 @@ import {Snackbar} from "@mui/material";
 import {Routes, Route, useNavigate, useLocation} from "react-router-dom";
 import {RoutePath} from "./functionalities/RoutePath"
 import React from "react";
+import {ThemeProvider} from "@mui/material/styles";
+import CssBaseline from "@mui/material/CssBaseline";
+import theme from "./theme";
 import {AddIncome} from "./components/Income/AddIncome";
 import {ExpenseIndividualReport} from "./components/Expense/ExpenseIndividualReport";
 import {IncomeIndividualReport} from "./components/Income/IncomeIndividualReport";
@@ -39,6 +42,8 @@ function App() {
     }, [location.pathname, navigate]);
 
   return (
+      <ThemeProvider theme={theme}>
+      <CssBaseline />
       <div>
         <Snackbar
             onClose={() => setOpenSnackbar(false)}
@@ -52,7 +57,7 @@ function App() {
               </Box>
           )}
           <br/>
-          <div>
+          <div className="page-transition" key={location.pathname}>
               <Routes>
                   <Route path={RoutePath.RootPath} element={<Index setSnackbarMessage={setSnackbarMessage} setOpenSnackbar={setOpenSnackbar}/>}></Route>
                   <Route path={RoutePath.Login} element={<Login setSnackbarMessage={setSnackbarMessage} setOpenSnackbar={setOpenSnackbar}/>}></Route>
@@ -73,8 +78,7 @@ function App() {
               </Routes>
           </div>
       </div>
-
-
+      </ThemeProvider>
   );
 }
 
