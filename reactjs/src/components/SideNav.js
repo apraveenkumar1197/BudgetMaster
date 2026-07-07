@@ -41,78 +41,60 @@ export default function SideNav() {
     const navigatePage = (path) => {
         navigate(path, {replace: true})
     };
+
+    const navItem = (label, path) => {
+        const isActive = location.pathname === path;
+        return (
+            <ListItem disablePadding>
+                <ListItemButton
+                    selected={isActive}
+                    onClick={() => navigatePage(path)}
+                    sx={{
+                        '&.Mui-selected': {
+                            bgcolor: 'rgba(79, 70, 229, 0.12)',
+                            borderLeft: '3px solid',
+                            borderColor: 'primary.main',
+                        },
+                        '&.Mui-selected:hover': {
+                            bgcolor: 'rgba(79, 70, 229, 0.18)',
+                        },
+                    }}>
+                    <ListItemText primary={label} primaryTypographyProps={{fontWeight: isActive ? 700 : 500}}/>
+                </ListItemButton>
+            </ListItem>
+        );
+    };
+
     const list = (anchor) => (
         <Box
-            sx={{width: anchor === 'top' || anchor === 'bottom' ? 'auto' : 250}}
+            sx={{width: anchor === 'top' || anchor === 'bottom' ? 'auto' : 260}}
             role="presentation"
             onClick={toggleDrawer(anchor, false)}
             onKeyDown={toggleDrawer(anchor, false)}>
-
+            <Box sx={{
+                p: 2,
+                backgroundImage: 'linear-gradient(135deg, #4f46e5 0%, #6366f1 60%, #0d9488 130%)',
+                color: '#fff'
+            }}>
+                <Typography variant="h6" sx={{fontWeight: 700}}>BudgetMaster</Typography>
+            </Box>
             <List>
-                <ListItem disablePadding>
-                    <ListItemButton onClick={() => navigatePage(RoutePath.Dashi)}>
-                        <ListItemText primary={'Dashi'}/>
-                    </ListItemButton>
-                </ListItem>
-                 <ListItem disablePadding>
-                    <ListItemButton onClick={() => navigatePage(RoutePath.Tally)}>
-                        <ListItemText primary={'Tally'}/>
-                    </ListItemButton>
-                </ListItem>
+                {navItem('Dashi', RoutePath.Dashi)}
+                {navItem('Tally', RoutePath.Tally)}
                 <Divider/>
-                <ListItem disablePadding>
-                    <ListItemButton onClick={() => navigatePage(RoutePath.Expense)}>
-                        <ListItemText primary={'Add Expense'}/>
-                    </ListItemButton>
-                </ListItem>
-                <ListItem disablePadding>
-                    <ListItemButton onClick={() => navigatePage(RoutePath.Income)}>
-                        <ListItemText primary={'Add Income'}/>
-                    </ListItemButton>
-                </ListItem>
+                {navItem('Add Expense', RoutePath.Expense)}
+                {navItem('Add Income', RoutePath.Income)}
                 <Divider/>
-                <ListItem disablePadding>
-                    <ListItemButton onClick={() => navigatePage(RoutePath.Dues)}>
-                        <ListItemText primary={'Dues'}/>
-                    </ListItemButton>
-                </ListItem>
-                <ListItem disablePadding>
-                    <ListItemButton onClick={() => navigatePage(RoutePath.Returns)}>
-                        <ListItemText primary={'Returns'}/>
-                    </ListItemButton>
-                </ListItem>
-                <ListItem disablePadding>
-                    <ListItemButton onClick={() => navigatePage(RoutePath.CreditCard)}>
-                        <ListItemText primary={'Credit Card'}/>
-                    </ListItemButton>
-                </ListItem>
+                {navItem('Dues', RoutePath.Dues)}
+                {navItem('Returns', RoutePath.Returns)}
+                {navItem('Credit Card', RoutePath.CreditCard)}
                 <Divider/>
-                <ListItem disablePadding>
-                    <ListItemButton onClick={() => navigatePage(RoutePath.IndividualExpenseReport)}>
-                        <ListItemText primary={'Expense report'}/>
-                    </ListItemButton>
-                </ListItem>
-                <ListItem disablePadding>
-                    <ListItemButton onClick={() => navigatePage(RoutePath.IndividualIncomeReport)}>
-                        <ListItemText primary={'Income report'}/>
-                    </ListItemButton>
-                </ListItem>
-                <ListItem disablePadding>
-                    <ListItemButton onClick={() => navigatePage(RoutePath.TransferReport)}>
-                        <ListItemText primary={'Transfer report'}/>
-                    </ListItemButton>
-                </ListItem>
+                {navItem('Expense report', RoutePath.IndividualExpenseReport)}
+                {navItem('Income report', RoutePath.IndividualIncomeReport)}
+                {navItem('Transfer report', RoutePath.TransferReport)}
                 <Divider/>
-                <ListItem disablePadding>
-                    <ListItemButton onClick={() => navigatePage(RoutePath.PlanBudget)}>
-                        <ListItemText primary={'Plan Budget'}/>
-                    </ListItemButton>
-                </ListItem>
-                <ListItem disablePadding>
-                    <ListItemButton onClick={() => navigatePage(RoutePath.ReviewBudget)}>
-                        <ListItemText primary={'Review Budget'}/>
-                    </ListItemButton>
-                </ListItem>
+                {navItem('Plan Budget', RoutePath.PlanBudget)}
+                {navItem('Review Budget', RoutePath.ReviewBudget)}
             </List>
         </Box>
     );
@@ -124,19 +106,27 @@ export default function SideNav() {
     };
     return (
     <Box sx={{ flexGrow: 1 }}>
-        <AppBar position="static">
+        <AppBar position="static" elevation={0}>
             <Toolbar variant="dense">
                 <IconButton edge="start" color="inherit" aria-label="menu" sx={{ mr: 2 }}>
                     <MenuIcon onClick={toggleDrawer('left', true)}></MenuIcon>
                     <Drawer
                         anchor={'left'}
                         open={state['left']}
-                        onClose={toggleDrawer('left', false)}>
+                        onClose={toggleDrawer('left', false)}
+                        transitionDuration={250}
+                        PaperProps={{
+                            sx: {borderTopRightRadius: 16, borderBottomRightRadius: 16}
+                        }}>
                         {list('left')}
                     </Drawer>
                 </IconButton>
-                <Typography variant="h6" color="inherit" component="div">
-
+                <Typography variant="h6" color="inherit" component="div" sx={{
+                    display: {xs: 'none', sm: 'block'},
+                    fontWeight: 700,
+                    letterSpacing: 0.3
+                }}>
+                    BudgetMaster
                 </Typography>
                 <div style={{marginLeft: 'auto'}}>
                     <IconButton color="inherit" onClick={() => navigatePage(RoutePath.Dashi)}>
