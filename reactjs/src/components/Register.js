@@ -3,6 +3,12 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
+import Container from '@mui/material/Container';
+import Paper from '@mui/material/Paper';
+import Fade from '@mui/material/Fade';
+import Stepper from '@mui/material/Stepper';
+import Step from '@mui/material/Step';
+import StepLabel from '@mui/material/StepLabel';
 import {RegisterProfile} from "./Register/RegisterProfile";
 import {RegisterInvestments} from "./Register/RegisterInvestments";
 import {RegisterLoans} from "./Register/RegisterLoans";
@@ -60,9 +66,20 @@ export const Registration = (props) => {
     }
 
     return (
-        <Box>
-            <React.Fragment>
-                <Typography component={'span'} sx={{ mt: 2, mb: 1 }}>{ui[activeStep]}</Typography>
+        <Container maxWidth="sm" sx={{ px: {xs: 1.5, sm: 3}, py: 3 }}>
+            <Paper elevation={0} sx={{ p: {xs: 2, sm: 3}, borderRadius: 4 }}>
+                <Stepper activeStep={activeStep} alternativeLabel sx={{ mb: 3, flexWrap: 'wrap' }}>
+                    {steps.map((label) => (
+                        <Step key={label}>
+                            <StepLabel>{label}</StepLabel>
+                        </Step>
+                    ))}
+                </Stepper>
+                <Fade in key={activeStep} timeout={350}>
+                    <Box>
+                        <Typography component={'span'} sx={{ mt: 2, mb: 1 }}>{ui[activeStep]}</Typography>
+                    </Box>
+                </Fade>
                 <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
                     <Button
                         color="inherit"
@@ -73,13 +90,13 @@ export const Registration = (props) => {
                     </Button>
                     <Box sx={{ flex: '1 1 auto' }} />
                     {activeStep === steps.length - 1 ? (
-                        <Button onClick={handleNext}>Finish</Button>
+                        <Button variant="contained" onClick={handleNext}>Finish</Button>
                     ): (
-                        <Button onClick={handleNext}>Next</Button>
+                        <Button variant="contained" onClick={handleNext}>Next</Button>
                     )}
 
                 </Box>
-            </React.Fragment>
-        </Box>
+            </Paper>
+        </Container>
     );
 }

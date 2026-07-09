@@ -7,12 +7,11 @@ import {
     Box,
     Button, CircularProgress,
     Container,
-    createTheme,
-    CssBaseline,
+    Fade,
+    Paper,
     TextField,
     Typography
 } from "@mui/material";
-import {ThemeProvider} from "@emotion/react";
 import * as PropTypes from "prop-types";
 import LocalStorage from "../providers/LocalStorage";
 
@@ -24,7 +23,6 @@ function Copyright() {
 
 Copyright.propTypes = {sx: PropTypes.shape({mb: PropTypes.number, mt: PropTypes.number})};
 export const Login = (props) => {
-    const theme = createTheme();
     const navigate = useNavigate()
 
     const [email, setEmail] = React.useState('')
@@ -82,20 +80,39 @@ export const Login = (props) => {
 
     }
 
-    return <ThemeProvider theme={theme}>
-        <Container component="main" maxWidth="xs">
-            <CssBaseline />
+    return <Box
+        sx={{
+            minHeight: '100vh',
+            width: '100%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            px: 2,
+            py: {xs: 4, sm: 0},
+            backgroundImage: 'linear-gradient(135deg, #4f46e5 0%, #6366f1 55%, #0d9488 130%)',
+        }}>
+        <Fade in timeout={500}>
+            <Container component="main" maxWidth="xs" disableGutters>
+                <Paper
+                    elevation={0}
+                    sx={{
+                        borderRadius: 4,
+                        p: {xs: 3, sm: 4},
+                        boxShadow: '0 20px 45px rgba(30, 27, 58, 0.25)',
+                    }}>
             <Box
                 sx={{
-                    marginTop: 8,
                     display: 'flex',
                     flexDirection: 'column',
                     alignItems: 'center',
                 }}>
-                <Typography component="h1" variant="h5">
-                    Sign in
+                <Typography component="h1" variant="h5" sx={{fontWeight: 700, mb: 0.5}}>
+                    Welcome back
                 </Typography>
-                <Box component="form" noValidate>
+                <Typography variant="body2" color="text.secondary" sx={{mb: 1}}>
+                    Sign in to BudgetMaster
+                </Typography>
+                <Box component="form" noValidate sx={{width: '100%'}}>
                     <TextField
                         value={email}
                         onInput={(e)=>setEmail(e.target.value)}
@@ -186,6 +203,8 @@ export const Login = (props) => {
                 </Box>
             </Box>
             <Copyright sx={{ mt: 8, mb: 4 }} />
-        </Container>
-    </ThemeProvider>
+                </Paper>
+            </Container>
+        </Fade>
+    </Box>
 }
