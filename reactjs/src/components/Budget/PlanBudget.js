@@ -478,8 +478,8 @@ export const PlanBudget = (props) => {
                 </Box>
                 <Box sx={{ flex: 1, overflow: 'auto' }}>
                     {budgetListLoading ? <PageLoader /> :
-                        (singleEntryTableView ? (<Table size="small">
-                            <TableHead style={{ backgroundColor: '#1976d2' }}>
+                        (singleEntryTableView ? (<TableContainer sx={{ width: '100%' }}><Table size="small">
+                            <TableHead sx={{ backgroundColor: 'primary.main' }}>
                                 <TableRow>
                                     <TableCell sx={{ color: 'white', fontWeight: 600 }}>S.No</TableCell>
                                     <TableCell sx={{ color: 'white', fontWeight: 600 }}>Reason</TableCell>
@@ -554,8 +554,8 @@ export const PlanBudget = (props) => {
                                     <TableCell></TableCell>
                                 </TableRow>
                             </TableFooter>
-                        </Table>) : (<Table size="small">
-                            <TableHead style={{ backgroundColor: '#1976d2' }}>
+                        </Table></TableContainer>) : (<TableContainer sx={{ width: '100%' }}><Table size="small">
+                            <TableHead sx={{ backgroundColor: 'primary.main' }}>
                                 <TableRow>
                                     <TableCell sx={{ color: 'white', fontWeight: 600 }}>S.No</TableCell>
                                     <TableCell sx={{ color: 'white', fontWeight: 600 }}>Category</TableCell>
@@ -576,7 +576,7 @@ export const PlanBudget = (props) => {
                                     <TableCell><strong style={{ fontSize: '1.25rem' }}>{formatter.format(budgetTotalAmount)}</strong></TableCell>
                                 </TableRow>
                             </TableFooter>
-                        </Table>))
+                        </Table></TableContainer>))
                     }
                 </Box>
             </Paper>
