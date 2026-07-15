@@ -3,9 +3,11 @@ import {
     Table,
     TableBody,
     TableCell,
+    TableContainer,
     TableHead,
     TableRow,
     Box,
+    Fade,
     Modal, TableFooter, Button
 } from "@mui/material";
 import React from "react";
@@ -18,18 +20,17 @@ import * as Immutable from "@mui/material";
 
 const style = {
     position: 'absolute',
-    overflow: 'scroll',
+    overflow: 'auto',
     top: '50%',
     left: '50%',
-    height: '100%',
-    maxHeight: 500,
+    maxHeight: '85vh',
     transform: 'translate(-50%, -50%)',
-    width: 400,
+    width: {xs: '92%', sm: 420},
     bgcolor: 'background.paper',
-    border: '2px solid #000',
+    borderRadius: 3,
     boxShadow: 24,
     pt: 2,
-    px: 4,
+    px: {xs: 2, sm: 4},
     pb: 3,
 };
 
@@ -158,8 +159,10 @@ export const MyInvestments = (props) => {
                 open={props.myInvestments}
                 onClose={!props.myInvestments}
                 onBackdropClick={() => props.setMyInvestments(false)}
+                closeAfterTransition
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description">
+                <Fade in={props.myInvestments}>
                 <Box sx={style}>
                     <FormControlLabel
                         control={<Switch
@@ -169,12 +172,13 @@ export const MyInvestments = (props) => {
                     <FormControlLabel
                         control={<Button onClick={sortList}>{sortListText}</Button>}/>
 
+                    <TableContainer sx={{ maxHeight: '55vh' }}>
                     <Table>
-                        <TableHead style={{backgroundColor: '#1976d2', color: '#ffffff'}}>
+                        <TableHead sx={{backgroundColor: 'primary.main'}}>
                             <TableRow>
-                                <TableCell>Investment name</TableCell>
-                                <TableCell>Amount</TableCell>
-                                <TableCell></TableCell>
+                                <TableCell sx={{ color: 'white' }}>Investment name</TableCell>
+                                <TableCell sx={{ color: 'white' }}>Amount</TableCell>
+                                <TableCell sx={{ color: 'white' }}></TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
@@ -210,7 +214,9 @@ export const MyInvestments = (props) => {
                             </TableRow>
                         </TableFooter>
                     </Table>
+                    </TableContainer>
                 </Box>
+                </Fade>
             </Modal>
         </div>
     );

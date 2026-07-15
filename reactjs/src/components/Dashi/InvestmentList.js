@@ -1,4 +1,4 @@
-import {Table, TableBody, TableCell, TableHead, TableRow} from "@mui/material";
+import {Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography} from "@mui/material";
 import React, {Component} from "react";
 import Util from "../../functionalities/Util";
 import Investment from "../../repo/Investment";
@@ -23,11 +23,12 @@ export const InvestmentList = (props) => {
         getInvestmentList()
     },[]);
 
-    return <Table>
-        <TableHead style={{backgroundColor: '#1976d2'}}>
+    return <TableContainer component={Paper} sx={{ minWidth: 0 }}>
+    <Table>
+        <TableHead sx={{backgroundColor: 'primary.main'}}>
             <TableRow>
-                <TableCell style={{color: 'white'}} align="center" colSpan={2} onClick={() => { props.setMyInvestments(true) }}>
-                    <h2>Investments</h2>
+                <TableCell style={{color: 'white', cursor: 'pointer'}} align="center" colSpan={2} onClick={() => { props.setMyInvestments(true) }}>
+                    <Typography variant="h6" component="span" sx={{color: 'inherit'}}>Investments</Typography>
                 </TableCell>
             </TableRow>
             <TableRow>
@@ -44,4 +45,5 @@ export const InvestmentList = (props) => {
             ))}
         </TableBody>
     </Table>
+    </TableContainer>
 }

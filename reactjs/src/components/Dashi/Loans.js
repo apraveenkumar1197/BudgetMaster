@@ -1,6 +1,6 @@
 import React from "react";
 import LoansRepo from "../../repo/LoansRepo";
-import {Table, TableBody, TableCell, TableHead, TableRow} from "@mui/material";
+import {Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography} from "@mui/material";
 import Util from "../../functionalities/Util";
 
 
@@ -25,11 +25,12 @@ export const Loans = (props) => {
         getLoansList()
     },[]);
 
-    return isLoansVisible ? <Table>
+    return isLoansVisible ? <TableContainer component={Paper} sx={{ minWidth: 0 }}>
+    <Table>
         <TableHead style={{backgroundColor: '#d80404'}}>
             <TableRow>
                 <TableCell style={{color: 'white'}} align="center" colSpan={2}>
-                    <h2>Loans</h2>
+                    <Typography variant="h6" component="span" sx={{color: 'inherit'}}>Loans</Typography>
                 </TableCell>
             </TableRow>
             <TableRow>
@@ -45,6 +46,7 @@ export const Loans = (props) => {
                 </TableRow>
             ))}
         </TableBody>
-    </Table> :
+    </Table>
+    </TableContainer> :
         <div></div>
 }
