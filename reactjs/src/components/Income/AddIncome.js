@@ -249,7 +249,7 @@ export const AddIncome = (props) => {
 
                 {/* Category and Sub Category */}
                 <Grid container spacing={2} sx={{ mb: 2 }}>
-                    <Grid item xs={6}>
+                    <Grid item xs={12} sm={6}>
                         <Autocomplete
                             value={incomeCategory}
                             freeSolo
@@ -279,7 +279,7 @@ export const AddIncome = (props) => {
                             )}
                         />
                     </Grid>
-                    <Grid item xs={6}>
+                    <Grid item xs={12} sm={6}>
                         <Autocomplete
                             value={incomeSubCategory}
                             freeSolo
@@ -317,7 +317,7 @@ export const AddIncome = (props) => {
 
                 {/* Amount and Pay Mode */}
                 <Grid container spacing={2} sx={{ mb: 3 }}>
-                    <Grid item xs={6}>
+                    <Grid item xs={12} sm={6}>
                         <SmallOutlinedTextBox
                             id="income_amount"
                             label="Amount"
@@ -326,7 +326,7 @@ export const AddIncome = (props) => {
                             fullWidth
                         />
                     </Grid>
-                    <Grid item xs={6}>
+                    <Grid item xs={12} sm={6}>
                         <Autocomplete
                             value={incomePayMode}
                             freeSolo

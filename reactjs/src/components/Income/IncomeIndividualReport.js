@@ -1,9 +1,11 @@
 import {
     Autocomplete,
     Grid,
+    Paper,
     Table,
     TableBody,
     TableCell,
+    TableContainer,
     TableFooter,
     TableHead,
     TableRow,
@@ -109,7 +111,7 @@ export const IncomeIndividualReport = (props) => {
                 options={incomeReportReasons}
                 getOptionLabel={(option) => option.reason}
                 onChange={(e, v) => {setReason(v);}}
-                sx={{width: 300}}
+                sx={{width: {xs: '100%', sm: 300}}}
                 renderInput={(params) => (
                     <TextField
                         {...params}
@@ -134,7 +136,7 @@ export const IncomeIndividualReport = (props) => {
                 options={incomeReportCategories}
                 onChange={(e, v) => {setCategory(v); getSubcategoriesByCategoryId();}}
                 getOptionLabel={(option) => option.category}
-                sx={{width: 300}}
+                sx={{width: {xs: '100%', sm: 300}}}
                 renderInput={(params) => (
                     <TextField
                         {...params}
@@ -161,7 +163,7 @@ export const IncomeIndividualReport = (props) => {
                     setSubCategory(v)
                 }}
                 getOptionLabel={(option) => option.name}
-                sx={{width: 300}}
+                sx={{width: {xs: '100%', sm: 300}}}
                 renderInput={(params) => (
                     <TextField
                         {...params}
@@ -186,7 +188,7 @@ export const IncomeIndividualReport = (props) => {
                 options={incomeReportPayModes}
                 onChange={(e, v) => {setPayMode(v)}}
                 getOptionLabel={(option) => option.pay_mode}
-                sx={{width: 300}}
+                sx={{width: {xs: '100%', sm: 300}}}
                 renderInput={(params) => (
                     <TextField
                         {...params}
@@ -202,52 +204,56 @@ export const IncomeIndividualReport = (props) => {
                 )}
             />
         </Grid>
-        <Table flex={1}>
-            <TableHead style={{backgroundColor: '#1976d2'}}>
-                <TableRow>
-                    <TableCell>S.No</TableCell>
-                    <TableCell>Reason</TableCell>
-                    <TableCell>Date</TableCell>
-                    <TableCell>Category</TableCell>
-                    <TableCell>Sub category</TableCell>
-                    <TableCell>Amount</TableCell>
-                    <TableCell>Pay mode</TableCell>
-                    <TableCell>Description</TableCell>
-                </TableRow>
-            </TableHead>
-            <TableBody>
-                <TableRow>
-                    <TableCell></TableCell>
-                    <TableCell></TableCell>
-                    <TableCell></TableCell>
-                    <TableCell></TableCell>
-                    <TableCell></TableCell>
-                    <TableCell><b>{formatter.format(incomeListTotal)} ({incomeList.length})</b></TableCell>
-                    <TableCell></TableCell>
-                </TableRow>
-                {incomeList.map((income, i) => (
-                    <TableRow>
-                        <TableCell>{i + 1}</TableCell>
-                        <TableCell>{income.reason.name}</TableCell>
-                        <TableCell>{income.date}</TableCell>
-                        <TableCell>{income.category == null ? '' : income.category.name}</TableCell>
-                        <TableCell>{income.subCategory == null ? '' :  income.subCategory.name}</TableCell>
-                        <TableCell>{formatter.format(income.amount)}</TableCell>
-                        <TableCell>{income.payMode.name}</TableCell>
-                        <TableCell>{income.description}</TableCell>
-                    </TableRow>
-                ))}
-            </TableBody>
-            <TableFooter>
-                <TableRow>
-                    <TableCell></TableCell>
-                    <TableCell></TableCell>
-                    <TableCell></TableCell>
-                    <TableCell></TableCell>
-                    <TableCell></TableCell>
-                    <TableCell></TableCell>
-                </TableRow>
-            </TableFooter>
-        </Table>
+        <Grid item xs={12}>
+            <TableContainer component={Paper} sx={{ minWidth: 0, maxHeight: { xs: '60vh', md: '65vh' } }}>
+                <Table size="small" stickyHeader>
+                    <TableHead sx={{backgroundColor: 'primary.main'}}>
+                        <TableRow>
+                            <TableCell sx={{ color: 'white', backgroundColor: 'primary.main' }}>S.No</TableCell>
+                            <TableCell sx={{ color: 'white', backgroundColor: 'primary.main' }}>Reason</TableCell>
+                            <TableCell sx={{ color: 'white', backgroundColor: 'primary.main' }}>Date</TableCell>
+                            <TableCell sx={{ color: 'white', backgroundColor: 'primary.main' }}>Category</TableCell>
+                            <TableCell sx={{ color: 'white', backgroundColor: 'primary.main' }}>Sub category</TableCell>
+                            <TableCell sx={{ color: 'white', backgroundColor: 'primary.main' }}>Amount</TableCell>
+                            <TableCell sx={{ color: 'white', backgroundColor: 'primary.main' }}>Pay mode</TableCell>
+                            <TableCell sx={{ color: 'white', backgroundColor: 'primary.main' }}>Description</TableCell>
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        <TableRow>
+                            <TableCell></TableCell>
+                            <TableCell></TableCell>
+                            <TableCell></TableCell>
+                            <TableCell></TableCell>
+                            <TableCell></TableCell>
+                            <TableCell><b>{formatter.format(incomeListTotal)} ({incomeList.length})</b></TableCell>
+                            <TableCell></TableCell>
+                        </TableRow>
+                        {incomeList.map((income, i) => (
+                            <TableRow key={'income-report-' + i}>
+                                <TableCell>{i + 1}</TableCell>
+                                <TableCell>{income.reason.name}</TableCell>
+                                <TableCell>{income.date}</TableCell>
+                                <TableCell>{income.category == null ? '' : income.category.name}</TableCell>
+                                <TableCell>{income.subCategory == null ? '' :  income.subCategory.name}</TableCell>
+                                <TableCell>{formatter.format(income.amount)}</TableCell>
+                                <TableCell>{income.payMode.name}</TableCell>
+                                <TableCell>{income.description}</TableCell>
+                            </TableRow>
+                        ))}
+                    </TableBody>
+                    <TableFooter>
+                        <TableRow>
+                            <TableCell></TableCell>
+                            <TableCell></TableCell>
+                            <TableCell></TableCell>
+                            <TableCell></TableCell>
+                            <TableCell></TableCell>
+                            <TableCell></TableCell>
+                        </TableRow>
+                    </TableFooter>
+                </Table>
+            </TableContainer>
+        </Grid>
     </Grid>
 }

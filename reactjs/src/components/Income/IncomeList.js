@@ -1,4 +1,4 @@
-import { Grid, IconButton, Stack, Table, TableBody, TableCell, TableFooter, TableHead, TableRow, CircularProgress } from "@mui/material";
+import { Grid, IconButton, Stack, Table, TableBody, TableCell, TableContainer, TableFooter, TableHead, TableRow, Paper, CircularProgress } from "@mui/material";
 import React, { Component } from "react";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -39,8 +39,9 @@ export const IncomeList = (props) => {
         return <PageLoader />;
     }
 
-    return <Table size="small">
-        <TableHead style={{ backgroundColor: '#1976d2' }}>
+    return <TableContainer component={Paper} sx={{ minWidth: 0 }}>
+    <Table size="small">
+        <TableHead sx={{ backgroundColor: 'primary.main' }}>
             <TableRow>
                 <TableCell sx={{ color: 'white', fontWeight: 600 }}>S.No</TableCell>
                 <TableCell sx={{ color: 'white', fontWeight: 600 }}>Date</TableCell>
@@ -90,12 +91,13 @@ export const IncomeList = (props) => {
                 <TableCell></TableCell>
             </TableRow>
         </TableFooter>
-        <ConfirmationDialog
-            open={deleteDialogOpen}
-            handleClose={handleCloseDeleteDialog}
-            handleConfirm={handleConfirmDelete}
-            title="Delete Income?"
-            content="Are you sure you want to delete this income? This action cannot be undone."
-        />
     </Table>
+    <ConfirmationDialog
+        open={deleteDialogOpen}
+        handleClose={handleCloseDeleteDialog}
+        handleConfirm={handleConfirmDelete}
+        title="Delete Income?"
+        content="Are you sure you want to delete this income? This action cannot be undone."
+    />
+    </TableContainer>
 }
