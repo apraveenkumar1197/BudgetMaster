@@ -1,4 +1,4 @@
-import { Grid, IconButton, Stack, Table, TableBody, TableCell, TableHead, TableFooter, TableRow, CircularProgress } from "@mui/material";
+import { Grid, IconButton, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableFooter, TableRow, Paper, CircularProgress } from "@mui/material";
 import React, { Component } from "react";
 import Expense from "../../repo/Expense";
 import Util from "../../functionalities/Util";
@@ -41,8 +41,9 @@ export const ExpenseList = (props) => {
         return <PageLoader />;
     }
 
-    return <Table size="small">
-        <TableHead style={{ backgroundColor: '#1976d2' }}>
+    return <TableContainer component={Paper} sx={{ minWidth: 0 }}>
+    <Table size="small">
+        <TableHead sx={{ backgroundColor: 'primary.main' }}>
             <TableRow>
                 <TableCell sx={{ color: 'white', fontWeight: 600 }}>S.No</TableCell>
                 <TableCell sx={{ color: 'white', fontWeight: 600 }}>Date</TableCell>
@@ -92,12 +93,13 @@ export const ExpenseList = (props) => {
                 <TableCell></TableCell>
             </TableRow>
         </TableFooter>
-        <ConfirmationDialog
-            open={deleteDialogOpen}
-            handleClose={handleCloseDeleteDialog}
-            handleConfirm={handleConfirmDelete}
-            title="Delete Expense?"
-            content="Are you sure you want to delete this expense? This action cannot be undone."
-        />
     </Table>
+    <ConfirmationDialog
+        open={deleteDialogOpen}
+        handleClose={handleCloseDeleteDialog}
+        handleConfirm={handleConfirmDelete}
+        title="Delete Expense?"
+        content="Are you sure you want to delete this expense? This action cannot be undone."
+    />
+    </TableContainer>
 }

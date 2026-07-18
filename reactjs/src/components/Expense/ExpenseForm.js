@@ -209,7 +209,7 @@ export const ExpenseForm = ({ initialData, currentDate, onSubmitSuccess, onCance
             </Box>
 
             <Grid container spacing={2} sx={{ mb: 2 }}>
-                <Grid item xs={6}>
+                <Grid item xs={12} sm={6}>
                     <Autocomplete
                         value={expenseCategory}
                         freeSolo
@@ -227,7 +227,7 @@ export const ExpenseForm = ({ initialData, currentDate, onSubmitSuccess, onCance
                         )}
                     />
                 </Grid>
-                <Grid item xs={6}>
+                <Grid item xs={12} sm={6}>
                     <Autocomplete
                         value={expenseSubCategory}
                         freeSolo
@@ -251,7 +251,7 @@ export const ExpenseForm = ({ initialData, currentDate, onSubmitSuccess, onCance
             </Box>
 
             <Grid container spacing={2} sx={{ mb: 3 }}>
-                <Grid item xs={6}>
+                <Grid item xs={12} sm={6}>
                     <SmallOutlinedTextBox
                         label="Amount"
                         value={expenseAmount}
@@ -259,7 +259,7 @@ export const ExpenseForm = ({ initialData, currentDate, onSubmitSuccess, onCance
                         fullWidth
                     />
                 </Grid>
-                <Grid item xs={6}>
+                <Grid item xs={12} sm={6}>
                     <Autocomplete
                         value={expensePayMode}
                         freeSolo

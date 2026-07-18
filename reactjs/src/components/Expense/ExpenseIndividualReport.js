@@ -1,14 +1,24 @@
 import {
     Autocomplete,
+    Dialog,
+    DialogContent,
+    DialogTitle,
+    Fab,
     Grid,
+    IconButton,
+    Paper,
     Table,
     TableBody,
     TableCell,
+    TableContainer,
     TableFooter,
     TableHead,
     TableRow,
-    TextField
+    TextField,
+    Tooltip
 } from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
+import PieChartIcon from "@mui/icons-material/PieChart";
 import React from "react";
 import {LocalizationProvider, MobileDatePicker} from "@mui/x-date-pickers";
 import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs";
@@ -36,6 +46,8 @@ export const ExpenseIndividualReport = (props) => {
     const [category, setCategory] = React.useState(null);
     const [subCategory, setSubCategory] = React.useState(null);
     const [payMode, setPayMode] = React.useState(null);
+    const [pieChartOpen, setPieChartOpen] = React.useState(false);
+    const [pieChartReady, setPieChartReady] = React.useState(false);
 
 
     const getExpenseIndividualReport = () => {
@@ -87,7 +99,8 @@ export const ExpenseIndividualReport = (props) => {
         getExpenseIndividualReport()
     }, [fromDate, toDate, reason, category, subCategory, payMode]);
 
-    return <Grid
+    return <>
+    <Grid
         container spacing={0}>
         <Grid
             container spacing={0}>
@@ -138,7 +151,7 @@ export const ExpenseIndividualReport = (props) => {
                     onChange={(e, v) => {
                         setReason(v);
                     }}
-                    sx={{width: 300}}
+                    sx={{width: {xs: '100%', sm: 300}}}
                     renderInput={(params) => (
                         <TextField
                             {...params}
@@ -169,7 +182,7 @@ export const ExpenseIndividualReport = (props) => {
                         getSubcategoriesByCategoryId(v);
                     }}
                     getOptionLabel={(option) => option.category}
-                    sx={{width: 300}}
+                    sx={{width: {xs: '100%', sm: 300}}}
                     renderInput={(params) => (
                         <TextField
                             {...params}
@@ -198,7 +211,7 @@ export const ExpenseIndividualReport = (props) => {
                         setSubCategory(v)
                     }}
                     getOptionLabel={(option) => option.name}
-                    sx={{width: 300}}
+                    sx={{width: {xs: '100%', sm: 300}}}
                     renderInput={(params) => (
                         <TextField
                             {...params}
@@ -227,7 +240,7 @@ export const ExpenseIndividualReport = (props) => {
                         setPayMode(v)
                     }}
                     getOptionLabel={(option) => option.pay_mode}
-                    sx={{width: 300}}
+                    sx={{width: {xs: '100%', sm: 300}}}
                     renderInput={(params) => (
                         <TextField
                             {...params}
@@ -246,68 +259,104 @@ export const ExpenseIndividualReport = (props) => {
                 />
             </Grid>
             <Grid container>
-                <Grid style={{padding: 10}} item md={4} xs={12}>
-                    <PieChart
-                        series={[
-                            {
-                                data: chartCategoryList,
-                                labelPosition: 'outside',
-                                labelLine: true,
-                            },
-                        ]}
-                        slotProps={{
-                        }}
-                        height={500}
-                    />
+                <Grid style={{padding: 10}} item xs={12}>
+                    <TableContainer component={Paper} sx={{ minWidth: 0, maxHeight: { xs: '60vh', md: '65vh' } }}>
+                        <Table size="small" stickyHeader>
+                            <TableHead sx={{backgroundColor: 'primary.main'}}>
+                                <TableRow>
+                                    <TableCell sx={{ color: 'white', backgroundColor: 'primary.main' }}>S.No</TableCell>
+                                    <TableCell sx={{ color: 'white', backgroundColor: 'primary.main' }}>Reason</TableCell>
+                                    <TableCell sx={{ color: 'white', backgroundColor: 'primary.main' }}>Date</TableCell>
+                                    <TableCell sx={{ color: 'white', backgroundColor: 'primary.main' }}>Category</TableCell>
+                                    <TableCell sx={{ color: 'white', backgroundColor: 'primary.main' }}>Sub category</TableCell>
+                                    <TableCell sx={{ color: 'white', backgroundColor: 'primary.main' }}>Amount</TableCell>
+                                    <TableCell sx={{ color: 'white', backgroundColor: 'primary.main' }}>Pay mode</TableCell>
+                                    <TableCell sx={{ color: 'white', backgroundColor: 'primary.main' }}>Description</TableCell>
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                <TableRow>
+                                    <TableCell></TableCell>
+                                    <TableCell></TableCell>
+                                    <TableCell></TableCell>
+                                    <TableCell></TableCell>
+                                    <TableCell></TableCell>
+                                    <TableCell><b>{formatter.format(expenseListTotal)} ({expenseList.length})</b></TableCell>
+                                    <TableCell></TableCell>
+                                </TableRow>
+                                {expenseList.map((expense, i) => (
+                                    <TableRow key={'expense-report-' + i}>
+                                        <TableCell>{i + 1}</TableCell>
+                                        <TableCell>{expense.reason.name}</TableCell>
+                                        <TableCell>{expense.date}</TableCell>
+                                        <TableCell>{expense.category == null ? '' : expense.category.name}</TableCell>
+                                        <TableCell>{expense.subCategory == null ? '' : expense.subCategory.name}</TableCell>
+                                        <TableCell>{formatter.format(expense.amount)}</TableCell>
+                                        <TableCell>{expense.payMode.name}</TableCell>
+                                        <TableCell>{expense.description}</TableCell>
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                            <TableFooter>
+                                <TableRow>
+                                    <TableCell></TableCell>
+                                    <TableCell></TableCell>
+                                    <TableCell></TableCell>
+                                    <TableCell></TableCell>
+                                    <TableCell></TableCell>
+                                    <TableCell></TableCell>
+                                </TableRow>
+                            </TableFooter>
+                        </Table>
+                    </TableContainer>
                 </Grid>
-                <Table flex={1}>
-                    <TableHead style={{backgroundColor: '#1976d2'}}>
-                        <TableRow>
-                            <TableCell>S.No</TableCell>
-                            <TableCell>Reason</TableCell>
-                            <TableCell>Date</TableCell>
-                            <TableCell>Category</TableCell>
-                            <TableCell>Sub category</TableCell>
-                            <TableCell>Amount</TableCell>
-                            <TableCell>Pay mode</TableCell>
-                            <TableCell>Description</TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        <TableRow>
-                            <TableCell></TableCell>
-                            <TableCell></TableCell>
-                            <TableCell></TableCell>
-                            <TableCell></TableCell>
-                            <TableCell></TableCell>
-                            <TableCell><b>{formatter.format(expenseListTotal)} ({expenseList.length})</b></TableCell>
-                            <TableCell></TableCell>
-                        </TableRow>
-                        {expenseList.map((expense, i) => (
-                            <TableRow>
-                                <TableCell>{i + 1}</TableCell>
-                                <TableCell>{expense.reason.name}</TableCell>
-                                <TableCell>{expense.date}</TableCell>
-                                <TableCell>{expense.category == null ? '' : expense.category.name}</TableCell>
-                                <TableCell>{expense.subCategory == null ? '' : expense.subCategory.name}</TableCell>
-                                <TableCell>{formatter.format(expense.amount)}</TableCell>
-                                <TableCell>{expense.payMode.name}</TableCell>
-                                <TableCell>{expense.description}</TableCell>
-                            </TableRow>
-                        ))}
-                    </TableBody>
-                    <TableFooter>
-                        <TableRow>
-                            <TableCell></TableCell>
-                            <TableCell></TableCell>
-                            <TableCell></TableCell>
-                            <TableCell></TableCell>
-                            <TableCell></TableCell>
-                            <TableCell></TableCell>
-                        </TableRow>
-                    </TableFooter>
-                </Table>
             </Grid>
         </Grid>
     </Grid>
+
+    <Tooltip title="View category breakdown">
+        <Fab
+            color="primary"
+            aria-label="pie chart"
+            onClick={() => setPieChartOpen(true)}
+            sx={{ position: 'fixed', bottom: 24, right: 24 }}>
+            <PieChartIcon />
+        </Fab>
+    </Tooltip>
+
+    <Dialog
+        open={pieChartOpen}
+        onClose={() => setPieChartOpen(false)}
+        maxWidth="xs"
+        fullWidth
+        TransitionProps={{
+            onEntered: () => setPieChartReady(true),
+            onExited: () => setPieChartReady(false),
+        }}>
+        <DialogTitle>
+            Category breakdown
+            <IconButton
+                aria-label="close"
+                onClick={() => setPieChartOpen(false)}
+                sx={{ position: 'absolute', right: 8, top: 8 }}>
+                <CloseIcon />
+            </IconButton>
+        </DialogTitle>
+        <DialogContent>
+            {pieChartReady && (
+                <PieChart
+                    series={[
+                        {
+                            data: chartCategoryList,
+                            labelPosition: 'outside',
+                            labelLine: true,
+                            highlightScope: { faded: 'global', highlighted: 'item' },
+                        },
+                    ]}
+                    height={300}
+                />
+            )}
+        </DialogContent>
+    </Dialog>
+    </>
 }
