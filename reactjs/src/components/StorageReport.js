@@ -4,9 +4,11 @@ import Storage from "../repo/Storage";
 import {
     Autocomplete,
     Grid,
+    Paper,
     Table,
     TableBody,
     TableCell,
+    TableContainer,
     TableFooter,
     TableHead,
     TableRow,
@@ -97,7 +99,8 @@ export const StorageReport = (props) => {
                     console.log(v)
                     setFromStorage(v);
                 }}
-                sx={{ width: 300 }}
+                fullWidth
+                sx={{ width: { xs: '100%', sm: 300 } }}
                 renderInput={(params) => (
                     <TextField
                         {...params}
@@ -126,7 +129,8 @@ export const StorageReport = (props) => {
                     setToStorage(v);
                 }}
                 getOptionLabel={(option) => option.name}
-                sx={{ width: 300 }}
+                fullWidth
+                sx={{ width: { xs: '100%', sm: 300 } }}
                 renderInput={(params) => (
                     <TextField
                         {...params}
@@ -145,40 +149,32 @@ export const StorageReport = (props) => {
             />
         </Grid>
         <Grid style={{ padding: 10 }} item md={8} xs={12}>
-            <Table flex={1}>
-                <TableHead style={{ backgroundColor: '#1976d2' }}>
-                    <TableRow>
-                        <TableCell>S.No</TableCell>
-                        <TableCell>Date</TableCell>
-                        <TableCell>From</TableCell>
-                        <TableCell>To</TableCell>
-                        <TableCell>Amount</TableCell>
-                    </TableRow>
-                </TableHead>
-                <TableBody>
-                    {storageTransferList.map((transfer, i) => (
+            <TableContainer component={Paper} sx={{ maxHeight: { xs: '60vh', md: '65vh' } }}>
+                <Table size="small" stickyHeader>
+                    <TableHead sx={{ backgroundColor: 'primary.main' }}>
                         <TableRow>
-                            <TableCell>{i + 1}</TableCell>
-                            <TableCell>{transfer.date}</TableCell>
-                            <TableCell>{transfer.from}</TableCell>
-                            <TableCell>{transfer.to}</TableCell>
-                            <TableCell>{formatter.format(transfer.amount)}</TableCell>
+                            <TableCell sx={{ color: 'white', backgroundColor: 'primary.main' }}>S.No</TableCell>
+                            <TableCell sx={{ color: 'white', backgroundColor: 'primary.main' }}>Date</TableCell>
+                            <TableCell sx={{ color: 'white', backgroundColor: 'primary.main' }}>From</TableCell>
+                            <TableCell sx={{ color: 'white', backgroundColor: 'primary.main' }}>To</TableCell>
+                            <TableCell sx={{ color: 'white', backgroundColor: 'primary.main' }}>Amount</TableCell>
                         </TableRow>
-                    ))}
-                </TableBody>
-                <TableFooter>
-                    <TableRow>
-                        <TableCell></TableCell>
-                        <TableCell></TableCell>
-                        <TableCell></TableCell>
-                        <TableCell></TableCell>
-                        <TableCell></TableCell>
-                        <TableCell></TableCell>
-                    </TableRow>
-                </TableFooter>
-            </Table>
+                    </TableHead>
+                    <TableBody>
+                        {storageTransferList.map((transfer, i) => (
+                            <TableRow key={i} hover>
+                                <TableCell>{i + 1}</TableCell>
+                                <TableCell>{transfer.date}</TableCell>
+                                <TableCell>{transfer.from}</TableCell>
+                                <TableCell>{transfer.to}</TableCell>
+                                <TableCell>{formatter.format(transfer.amount)}</TableCell>
+                            </TableRow>
+                        ))}
+                    </TableBody>
+                </Table>
+            </TableContainer>
         </Grid>
-        <Grid style={{ padding: 10 }} item md={4} xs={6}>
+        <Grid style={{ padding: 10 }} item md={4} xs={12}>
             <StorageUi
                 storageTransfer={false}
                 setSnackbarMessage={props.setSnackbarMessage}

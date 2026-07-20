@@ -3,13 +3,16 @@ import {
     Autocomplete,
     Button,
     Grid,
+    Paper,
     Table,
     TableBody,
     TableCell,
+    TableContainer,
     TableFooter,
     TableHead,
     TableRow,
-    TextField
+    TextField,
+    Typography
 } from "@mui/material";
 import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
@@ -43,11 +46,13 @@ export const StorageUi = (props) => {
     const handleClose = () => setOpen(false);
 
 
-    return loading ? <PageLoader/> : <div>
+    return loading ? <PageLoader/> : <TableContainer component={Paper} sx={{ minWidth: 0 }}>
         <Table>
-            <TableHead style={{backgroundColor: '#1976d2'}}>
+            <TableHead sx={{backgroundColor: 'primary.main'}}>
                 <TableRow>
-                    <TableCell style={{color: 'white'}} align="center" colSpan={2}><h2>Storage</h2></TableCell>
+                    <TableCell style={{color: 'white'}} align="center" colSpan={2}>
+                        <Typography variant="h6" component="span" sx={{color: 'inherit'}}>Storage</Typography>
+                    </TableCell>
                 </TableRow>
                 <TableRow>
                     <TableCell style={{color: 'white'}}>Storage</TableCell>
@@ -81,9 +86,9 @@ export const StorageUi = (props) => {
                             </TableCell> :
                             <div></div>
                     }
-                    <TableCell><h2>{formatter.format(props.totalAmount)}</h2></TableCell>
+                    <TableCell><Typography variant="h6">{formatter.format(props.totalAmount)}</Typography></TableCell>
                 </TableRow>
             </TableFooter>
         </Table>
-    </div>
+    </TableContainer>
 }
