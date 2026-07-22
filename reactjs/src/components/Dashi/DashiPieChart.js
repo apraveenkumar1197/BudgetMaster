@@ -24,7 +24,7 @@ export const DashiPieChart = (props) => {
                 <Typography variant="h6" component="div" gutterBottom>
                     {props.name}
                 </Typography>
-                <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: 300 }}>
+                <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%', height: 300 }}>
                     {chartData.length > 0 ? (
                         <PieChart
                             series={[
@@ -42,7 +42,6 @@ export const DashiPieChart = (props) => {
                                     //cy: 150,
                                 },
                             ]}
-                            width={400}
                             height={300}
                             slotProps={{
                                 legend: { hidden: true },
