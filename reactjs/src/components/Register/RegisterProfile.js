@@ -34,26 +34,22 @@ export const RegisterProfile = (props) => {
     }
 
 
-    return <Container sx={{width: '70%'}}>
-        <Grid container spacing={1}>
-            <Grid style={{padding: 10}} item md={4} xs={12}>
+    return <Container disableGutters maxWidth={false} sx={{width: '100%'}}>
+        <Grid container spacing={2}>
+            <Grid item xs={12} md={6}>
                 <SmallOutlinedTextBox id="profile_name"
                                       label="Name"
                                       value={name ? name : ''}
                                       onInput={(e) => setName(e.target.value)}/>
             </Grid>
-        </Grid>
-        <Grid container spacing={1}>
-            <Grid style={{padding: 10}} item md={4} xs={12}>
+            <Grid item xs={12} md={6}>
                 <SmallOutlinedTextBox id="profile_mobile_no"
                                       label="Mobile No"
                                       value={mobileNo ? mobileNo : ''}
                                       onInput={(e) => setMobileNo(e.target.value)}/>
             </Grid>
-        </Grid>
-        <Grid container spacing={1}>
-            <Grid style={{padding: 10}} item md={4} xs={12}>
-                <Button onClick={handleSubmit}>
+            <Grid item xs={12}>
+                <Button variant="contained" onClick={handleSubmit}>
                     Update
                 </Button>
             </Grid>

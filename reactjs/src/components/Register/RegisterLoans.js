@@ -3,6 +3,7 @@ import {
     Button,
     Container,
     Grid,
+    Paper,
     Table, TableBody, TableCell,
     TableContainer,
     TableHead,
@@ -69,12 +70,13 @@ export const RegisterLoans = (props) => {
         getLoansList()
     },[]);
 
-    return <Container sx={{ width: '70%' }}>
-        <Grid container spacing={1}>
-            <Grid style={{padding: 10}} item md={8} xs={12}>
+    return <Container disableGutters maxWidth={false} sx={{ width: '100%' }}>
+        <Grid container spacing={2}>
+            <Grid item xs={12} md={8}>
                 <Autocomplete
                     value={loanReason}
                     freeSolo
+                    fullWidth
                     id="loan_reason_autocomplete"
                     disableClearable
                     options={reasons.map((option) => option.reason)}
@@ -84,6 +86,7 @@ export const RegisterLoans = (props) => {
                             id="loan_reason"
                             label="Reason"
                             size="small"
+                            fullWidth
                             InputProps={{
                                 ...params.InputProps,
                                 type: 'search',
@@ -92,12 +95,11 @@ export const RegisterLoans = (props) => {
                     )}
                 />
             </Grid>
-        </Grid>
-        <Grid container spacing={1}>
-            <Grid style={{padding: 10}} item md={8} xs={12}>
+            <Grid item xs={12} md={8}>
                 <Autocomplete
                     value={loanCategory}
                     freeSolo
+                    fullWidth
                     id="loan_category_autocomplete"
                     disableClearable
                     options={categories.map((option) => option.category)}
@@ -107,6 +109,7 @@ export const RegisterLoans = (props) => {
                             id="loan_category"
                             label="Category"
                             size="small"
+                            fullWidth
                             InputProps={{
                                 ...params.InputProps,
                                 type: 'search',
@@ -115,21 +118,15 @@ export const RegisterLoans = (props) => {
                     )}
                 />
             </Grid>
-        </Grid>
-        <Grid container spacing={1}>
-            <Grid style={{padding: 10}} item md={4} xs={12}>
+            <Grid item xs={12} md={4}>
                 <SmallOutlinedTextBox id="loan_amount" label="Amount" value={loanAmount} onInput={(e)=>setLoanAmount(e.target.value)}/>
             </Grid>
-        </Grid>
-        <Grid container spacing={1}>
-            <Grid style={{padding: 10}} item md={4} xs={12}>
-                <Button onClick={handleAddLoan}>Add Loan</Button>
+            <Grid item xs={12} md={4}>
+                <Button variant="contained" onClick={handleAddLoan}>Add Loan</Button>
             </Grid>
-        </Grid>
-        <Grid container spacing={1}>
-            <Grid style={{padding: 10}} item md={4} xs={12}>
-                <TableContainer>
-                    <Table aria-label="simple table">
+            <Grid item xs={12}>
+                <TableContainer component={Paper}>
+                    <Table size="small" aria-label="simple table">
                         <TableHead>
                             <TableRow>
                                 <TableCell>S.No</TableCell>
@@ -139,7 +136,7 @@ export const RegisterLoans = (props) => {
                         </TableHead>
                         <TableBody>
                             {loans.map((loan,i) => (
-                                <TableRow key={i} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+                                <TableRow key={i} hover sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
                                     <TableCell align="right">{i+1}</TableCell>
                                     <TableCell align="right">{loan.reason}</TableCell>
                                     <TableCell align="right">{loan.amount}</TableCell>

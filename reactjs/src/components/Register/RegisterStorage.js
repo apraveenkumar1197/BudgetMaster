@@ -1,7 +1,7 @@
 import {
     Button,
     Container,
-    Grid, Table, TableBody, TableCell, TableContainer, TableHead, TableRow
+    Grid, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow
 } from "@mui/material";
 import React from "react";
 import {SmallOutlinedTextBox} from "../../ui/SmallOutlinedTextBox";
@@ -42,27 +42,20 @@ export const RegisterStorage = (props) => {
     React.useEffect(() => {
         getStorageList()
     },[]);
-    return <Container sx={{ width: '70%' }}>
-        <Grid container spacing={1}>
-            <Grid style={{padding: 10}} item md={8} xs={12}>
+    return <Container disableGutters maxWidth={false} sx={{ width: '100%' }}>
+        <Grid container spacing={2}>
+            <Grid item xs={12} md={8}>
                 <SmallOutlinedTextBox id="storage_name" label="Name" value={storageName} onInput={(e)=>setStorageName(e.target.value)}/>
-
             </Grid>
-        </Grid>
-        <Grid container spacing={1}>
-            <Grid style={{padding: 10}} item md={4} xs={12}>
+            <Grid item xs={12} md={4}>
                 <SmallOutlinedTextBox id="storage_amount" label="Amount" value={storageAmount} onInput={(e)=>setStorageAmount(e.target.value)}/>
             </Grid>
-        </Grid>
-        <Grid container spacing={1}>
-            <Grid style={{padding: 10}} item md={4} xs={12}>
-                <Button onClick={handleAddStorage}>Add Storage</Button>
+            <Grid item xs={12} md={4}>
+                <Button variant="contained" onClick={handleAddStorage}>Add Storage</Button>
             </Grid>
-        </Grid>
-        <Grid container spacing={1}>
-            <Grid style={{padding: 10}} item md={4} xs={12}>
-                <TableContainer>
-                    <Table aria-label="simple table">
+            <Grid item xs={12}>
+                <TableContainer component={Paper}>
+                    <Table size="small" aria-label="simple table">
                         <TableHead>
                             <TableRow>
                                 <TableCell>S.No</TableCell>
@@ -72,7 +65,7 @@ export const RegisterStorage = (props) => {
                         </TableHead>
                         <TableBody>
                             {storages.map((storage,i) => (
-                                <TableRow key={i} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+                                <TableRow key={i} hover sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
                                     <TableCell align="right">{i+1}</TableCell>
                                     <TableCell align="right">{storage.name}</TableCell>
                                     <TableCell align="right">{storage.amount}</TableCell>
