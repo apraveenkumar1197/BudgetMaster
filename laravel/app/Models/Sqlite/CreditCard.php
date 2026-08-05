@@ -9,7 +9,6 @@ class CreditCard extends Model
 {
     use HasFactory;
 
-    protected $connection = 'sqlite';
     protected $fillable = ['name', 'holder_name'];
 
     function scopeName($query, $name)

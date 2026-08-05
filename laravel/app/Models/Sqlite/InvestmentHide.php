@@ -10,7 +10,6 @@ class InvestmentHide extends Model
 {
     use HasFactory;
 
-    protected $connection = 'sqlite';
     protected $fillable = ['investment_reason'];
 
     function scopeReason($query, $reason)

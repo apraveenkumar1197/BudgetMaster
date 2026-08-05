@@ -11,7 +11,6 @@ class Category extends Model
 {
     use HasFactory;
 
-    protected $connection = 'sqlite';
     protected $fillable = ['category'];
 
     function scopeIds($query, $ids){

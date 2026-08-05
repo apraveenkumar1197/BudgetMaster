@@ -11,7 +11,6 @@ class PayMode extends Model
 {
     use HasFactory;
 
-    protected $connection = 'sqlite';
     public $timestamps = false;
     protected $fillable = ['pay_mode', 'storage_id'];
 

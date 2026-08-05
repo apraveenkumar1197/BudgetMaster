@@ -10,7 +10,6 @@ class Investment extends Model
 {
     use HasFactory;
 
-    protected $connection = 'sqlite';
     protected $fillable = ['name', 'category', 'amount'];
 
 

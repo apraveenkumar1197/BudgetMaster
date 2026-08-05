@@ -16,7 +16,6 @@ class Storage extends Model
 {
     use HasFactory, UtilTrait;
 
-    protected $connection = 'sqlite';
     public $timestamps = false;
 
     protected $fillable = ['name', 'amount'];

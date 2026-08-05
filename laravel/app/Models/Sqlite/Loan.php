@@ -9,6 +9,4 @@ class Loan extends Model
 {
     use HasFactory;
 
-    protected $connection = 'sqlite';
-
 }

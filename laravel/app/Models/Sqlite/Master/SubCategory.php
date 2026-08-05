@@ -9,7 +9,6 @@ class SubCategory extends Model
 {
     use HasFactory;
 
-    protected $connection = 'sqlite';
     protected $fillable = ['sub_category'];
 
     function scopeIds($query, $ids){

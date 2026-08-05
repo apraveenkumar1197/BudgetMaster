@@ -12,7 +12,6 @@ class Budget extends Model
 {
     use HasFactory;
 
-    protected $connection = 'sqlite';
     protected $fillable = ['month', 'reason', 'category', 'sub_category', 'amount'];
 
     function scopeMonth($query, $month)

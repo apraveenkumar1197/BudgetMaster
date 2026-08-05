@@ -9,8 +9,6 @@ class Reason extends Model
 {
     use HasFactory;
 
-    protected $connection = 'sqlite';
-
     protected $fillable = ["reason"];
 
     function scopeIds($query, $ids){

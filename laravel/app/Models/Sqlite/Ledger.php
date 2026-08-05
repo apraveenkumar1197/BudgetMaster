@@ -17,8 +17,6 @@ class Ledger extends Model
 {
     use HasFactory;
 
-    protected $connection = 'sqlite';
-
     protected $casts = [
         'type' => LedgerType::class,
         'secondary_type' => LedgerSecondaryType::class,
@@ -68,7 +66,7 @@ class Ledger extends Model
         if($month == NULL)
             $month = Carbon::now()->format('Y-m');
 
-        return $query->whereRaw("STRFTIME('%Y-%m', date) = ?", $month);
+        return $query->whereRaw("DATE_FORMAT(date, '%Y-%m') = ?", $month);
     }
 
     function scopeDateRange($query, $fromDate, $toDate)
@@ -184,8 +182,8 @@ class Ledger extends Model
     {
         return $query->where(function ($q) {
             return $q->where('category', Category::savingReturns()->first()->id)
-                ->orWhere('category', Category::investmentReturns()->first()->id)
-                ->orWhere('category', Category::investmentLoss()->first()->id);
+                ->orWhere('category', Category::investmentReturns()->first()->id);
+                //->orWhere('category', Category::investmentLoss()->first()->id);
         });
     }
 

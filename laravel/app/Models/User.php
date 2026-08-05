@@ -49,10 +49,6 @@ class User extends Authenticatable
     {
         return $query->where('email', $email);
     }
-    public function scopeIsDbExists(){
-        return $this->db_name != null;
-
-    }
 
 
 
