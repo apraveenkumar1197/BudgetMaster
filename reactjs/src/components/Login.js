@@ -49,6 +49,7 @@ export const Login = (props) => {
                 setSendOtpLoading(false)
             })
             .catch((err) => {
+                console.log(err)
                 props.setSnackbarMessage(err.response.data.msg)
                 props.setOpenSnackbar(true)
                 setSendOtpLoading(false)

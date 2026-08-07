@@ -1,4 +1,4 @@
-import {Autocomplete, Button, CircularProgress, Grid, TextField} from "@mui/material";
+import {Autocomplete, Button, CircularProgress, Grid, Paper, TextField, Typography} from "@mui/material";
 import {LocalizationProvider, MobileDatePicker} from "@mui/x-date-pickers";
 import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs";
 import {SmallOutlinedTextBox} from "../../ui/SmallOutlinedTextBox";
@@ -47,34 +47,25 @@ export const AddCreditCard = (props) => {
     },[]);
 
     return <Grid item xs={12} md={9}>
-        <Grid
-            container spacing={0}>
-            <Grid style={{padding: 10}} item xs={12} md={8}>
-                <SmallOutlinedTextBox id="test-text-field" label="Name" value={creditCardName}
-                                      onInput={(e) => setCreditCardName(e.target.value)}/>
+        <Paper elevation={3} sx={{ p: 3, mb: 3 }}>
+            <Typography variant="h5" gutterBottom sx={{ mb: 3, fontWeight: 600 }}>
+                Add Credit Card
+            </Typography>
+            <Grid container spacing={2} sx={{ mb: 2 }}>
+                <Grid item xs={12} sm={6}>
+                    <SmallOutlinedTextBox id="test-text-field" label="Name" value={creditCardName}
+                                          onInput={(e) => setCreditCardName(e.target.value)}/>
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                    <SmallOutlinedTextBox id="test-text-field-holder" label="Holder" value={creditCardHolderName}
+                                          onInput={(e) => setCreditCardHolderName(e.target.value)}/>
+                </Grid>
             </Grid>
-        </Grid>
-        <Grid
-            container spacing={0}>
-            <Grid style={{padding: 10}} item xs={12} md={8}>
-                <SmallOutlinedTextBox id="test-text-field" label="Holder" value={creditCardHolderName}
-                                      onInput={(e) => setCreditCardHolderName(e.target.value)}/>
-            </Grid>
-        </Grid>
-        <Grid
-            container
-            spacing={0}>
-            <Grid item style={{padding: 10}}>
-                <Box sx={{m: 1, position: 'relative'}}>
-                    <Button va riant="contained" onClick={resetForm}>Reset</Button>
-                </Box>
-            </Grid>
-            <Grid item style={{padding: 10}}>
-                <Box sx={{m: 1, position: 'relative'}}>
-                    <Button variant="contained" onClick={addCreditCard}>Add credit card</Button>
-                </Box>
-            </Grid>
-        </Grid>
+            <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
+                <Button variant="text" onClick={resetForm} size="small">Reset</Button>
+                <Button variant="contained" onClick={addCreditCard} size="large">Add credit card</Button>
+            </Box>
+        </Paper>
         <GetCreditCard creditCardList={creditCardList} />
     </Grid>
 }

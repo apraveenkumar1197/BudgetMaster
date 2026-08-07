@@ -1,4 +1,4 @@
-import {Container, Grid, IconButton, Stack, Table, TableBody, TableCell, TableHead, TableRow} from "@mui/material";
+import {Container, Grid, IconButton, Paper, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography} from "@mui/material";
 import {Chart} from "./Dashi/Chart";
 import {Storage} from "./Dashi/Storage";
 import {InvestmentList} from "./Dashi/InvestmentList";
@@ -28,27 +28,35 @@ export const TallyReport = (props) => {
         getReport()
     },[]);
 
-    return <Container maxWidth={false}>
+    return <Container maxWidth={false} sx={{ px: { xs: 1, sm: 3 }, py: 2 }}>
         <Grid justifyContent="center" container spacing={1}>
             <Grid item xs={12} md={6}>
                 <Stack direction='column' spacing={1}>
-                    <Table flex={1}>
-                        <TableHead style={{backgroundColor: '#1976d2'}}>
-                            <TableRow><TableCell>Month</TableCell><TableCell>Opening</TableCell><TableCell>Income</TableCell><TableCell>Expense</TableCell><TableCell>Closing</TableCell></TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {tallyList.map((tally, i) => (
+                    <Typography variant="h6" sx={{ fontWeight: 600 }}>Tally Report</Typography>
+                    <TableContainer component={Paper}>
+                        <Table size="small">
+                            <TableHead sx={{backgroundColor: 'primary.main'}}>
                                 <TableRow>
-                                    <TableCell>{tally.month}</TableCell>
-                                    <TableCell>{formatter.format(tally.opening)}</TableCell>
-                                    <TableCell>{formatter.format(tally.income)}</TableCell>
-                                    <TableCell>{formatter.format(tally.expense)}</TableCell>
-                                    <TableCell>{formatter.format(tally.closing)}</TableCell>
+                                    <TableCell style={{color: 'white'}}>Month</TableCell>
+                                    <TableCell style={{color: 'white'}}>Opening</TableCell>
+                                    <TableCell style={{color: 'white'}}>Income</TableCell>
+                                    <TableCell style={{color: 'white'}}>Expense</TableCell>
+                                    <TableCell style={{color: 'white'}}>Closing</TableCell>
                                 </TableRow>
-                            ))}
-                        </TableBody>
-                    </Table>
-
+                            </TableHead>
+                            <TableBody>
+                                {tallyList.map((tally, i) => (
+                                    <TableRow key={i} hover>
+                                        <TableCell>{tally.month}</TableCell>
+                                        <TableCell>{formatter.format(tally.opening)}</TableCell>
+                                        <TableCell>{formatter.format(tally.income)}</TableCell>
+                                        <TableCell>{formatter.format(tally.expense)}</TableCell>
+                                        <TableCell>{formatter.format(tally.closing)}</TableCell>
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
                 </Stack>
             </Grid>
         </Grid>
