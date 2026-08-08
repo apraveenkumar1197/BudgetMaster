@@ -34,21 +34,6 @@ return [
     */
 
     'connections' => [
-        'sqlite' => [
-            'driver' => 'sqlite',
-            'url' => null,
-            'database' => database_path('database.sqlite'),
-            'prefix' => '',
-            'foreign_key_constraints' => true,
-        ],
-        'sqlite_old' => [
-            'driver' => 'sqlite',
-            'url' => null,
-            'database' => database_path('homeexpense.db'),
-            'prefix' => '',
-            'foreign_key_constraints' => true,
-        ],
-
         'mysql' => [
             'driver' => 'mysql',
             'url' => env('DATABASE_URL'),

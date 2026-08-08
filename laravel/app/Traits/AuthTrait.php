@@ -7,11 +7,25 @@ use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\DB;
 
 trait AuthTrait {
+    private function passwordGrantClient(){
+        $client = DB::table('oauth_clients')
+            ->where('password_client', true)
+            ->where('revoked', false)
+            ->first();
+
+        if (!$client) {
+            throw new \RuntimeException('No active OAuth password grant client found in oauth_clients table.');
+        }
+
+        return $client;
+    }
+
     function login($emailID,$password){
+        $client = $this->passwordGrantClient();
         $data = [
             'grant_type' => 'password',
-            'client_id' => env('OAUTH_CLIENT_ID'),
-            'client_secret' => env('OAUTH_CLIENT_SECRET'),
+            'client_id' => $client->id,
+            'client_secret' => $client->secret,
             'username' => $emailID,
             'password' => $password,
             'scope' => '*',
@@ -19,11 +33,12 @@ trait AuthTrait {
         return $this->httpCall($data);
     }
     function refresh($refreshToken){
+        $client = $this->passwordGrantClient();
         $data = [
             'grant_type' => 'refresh_token',
             'refresh_token' => $refreshToken,
-            'client_id' => env('OAUTH_CLIENT_ID'),
-            'client_secret' => env('OAUTH_CLIENT_SECRET'),
+            'client_id' => $client->id,
+            'client_secret' => $client->secret,
             'scope' => '',
         ];
         return $this->httpCall($data);

@@ -10,11 +10,11 @@ class LoanFetcher
     function fetch()
     {
         $loans = Ledger::loans()
-            ->selectRaw("*,sum(credit) as amount")
+            ->selectRaw("name, MAX(sub_category) as sub_category, sum(credit) as amount")
             ->groupBy('name')
             ->get();
         $loansPaid = Ledger::loanPaid()
-            ->selectRaw("*,sum(debit) as amount")
+            ->selectRaw("name, sum(debit) as amount")
             ->groupBy('name')
             ->get();
 

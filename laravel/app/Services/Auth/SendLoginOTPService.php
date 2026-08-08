@@ -38,6 +38,7 @@ class SendLoginOTPService {
             ];
         }
         catch (Exception $e){
+            var_dump($e->getMessage());
             return [
                 "data"=> [
                     "msg"=>"Error in sending OTP"

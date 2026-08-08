@@ -3,7 +3,6 @@ namespace App\Services\Auth;
 
 use App\Models\Sqlite\Setting;
 use App\Models\User;
-use App\Services\DB\SqliteSetup;
 use App\Traits\AuthTrait;
 
 class ValidateLoginOTPService {
@@ -32,8 +31,6 @@ class ValidateLoginOTPService {
 
         $authResponseData = $this->login($this->email,$this->otp);
         $authResponseDataBody = json_decode($authResponseData->getBody()->getContents(),true);
-
-        new SqliteSetup($user);
 
         $authResponseDataBody['is_registration_completed'] = Setting::isRegistered();
 

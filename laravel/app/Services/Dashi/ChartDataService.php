@@ -34,7 +34,7 @@ class ChartDataService
         $categoryIds = Category::whereIn('category', ['Investment', 'Saving'])->pluck('id');
         return Ledger::expenses()
             ->category($categoryIds)
-            ->selectRaw('strftime("%Y-%m", date) as month, sum(debit) as amount')
+            ->selectRaw("DATE_FORMAT(date, '%Y-%m') as month, sum(debit) as amount")
             ->orderByDesc('month')
             ->groupBy(DB::raw('month'))
             ->limit(12)
@@ -45,7 +45,7 @@ class ChartDataService
     {
         return Ledger::incomes()
             ->whereNotIn('category', [Category::investmentReturns()->first()->id])
-            ->selectRaw('strftime("%Y-%m", date) as month, sum(credit) as amount')
+            ->selectRaw("DATE_FORMAT(date, '%Y-%m') as month, sum(credit) as amount")
             ->orderByDesc('month')
             ->groupBy(DB::raw('month'))
             ->limit(12)
@@ -56,7 +56,7 @@ class ChartDataService
         $categoryIds = Category::whereNotIn('category', ['Investment', 'Saving'])->pluck('id');
         return Ledger::expenses()
             ->category($categoryIds)
-            ->selectRaw('strftime("%Y-%m", date) as month, sum(debit) as amount')
+            ->selectRaw("DATE_FORMAT(date, '%Y-%m') as month, sum(debit) as amount")
             ->orderByDesc('month')
             ->groupBy(DB::raw('month'))
             ->limit(12)

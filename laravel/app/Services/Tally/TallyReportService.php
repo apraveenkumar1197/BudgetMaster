@@ -52,7 +52,7 @@ class TallyReportService
 
     private function opening($fromMonth)
     {
-        return Ledger::ledger()->whereRaw("strftime('%Y-%m', date) < ?", [$fromMonth])->selectRaw("IFNULL(sum(IFNULL(credit, 0)) - sum(IFNULL(debit, 0)), 0) as amount")->first()->amount;
+        return Ledger::ledger()->whereRaw("DATE_FORMAT(date, '%Y-%m') < ?", [$fromMonth])->selectRaw("IFNULL(sum(IFNULL(credit, 0)) - sum(IFNULL(debit, 0)), 0) as amount")->first()->amount;
     }
 
     private function ledger($fromMonth, $toMonth)
@@ -63,8 +63,8 @@ class TallyReportService
 
         return Ledger::ledger()
             ->whereNotIn('pay_mode', $payModeIds)
-            ->whereRaw("month between ? and ?", [$fromMonth, $toMonth])
-            ->selectRaw("strftime('%Y-%m', date) as month, sum(credit) as credit, sum(debit) as debit")
+            ->whereRaw("DATE_FORMAT(date, '%Y-%m') between ? and ?", [$fromMonth, $toMonth])
+            ->selectRaw("DATE_FORMAT(date, '%Y-%m') as month, sum(credit) as credit, sum(debit) as debit")
             ->orderBy('month')
             ->groupBy(DB::raw('month'))
             ->get();
@@ -78,8 +78,8 @@ class TallyReportService
 
         return Ledger::ledger()
             ->whereIn('pay_mode', $payModeIds)
-            ->whereRaw("month between ? and ?", [$fromMonth, $toMonth])
-            ->selectRaw("strftime('%Y-%m', date) as month, sum(debit) - sum(credit) as credit")
+            ->whereRaw("DATE_FORMAT(date, '%Y-%m') between ? and ?", [$fromMonth, $toMonth])
+            ->selectRaw("DATE_FORMAT(date, '%Y-%m') as month, sum(debit) - sum(credit) as credit")
             ->orderBy('month')
             ->groupBy(DB::raw('month'))
             ->pluck('credit', 'month')

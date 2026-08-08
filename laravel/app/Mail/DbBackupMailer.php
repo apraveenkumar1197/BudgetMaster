@@ -21,10 +21,10 @@ class DbBackupMailer extends Mailable
      * @return void
      */
 
-    private $dbName;
-    public function __construct($dbName)
+    private $filePath;
+    public function __construct($filePath)
     {
-        $this->dbName = $dbName;
+        $this->filePath = $filePath;
     }
 
     /**
@@ -59,8 +59,8 @@ class DbBackupMailer extends Mailable
     public function attachments()
     {
         return [
-            Attachment::fromPath(database_path($this->dbName))
-                ->as(date('Y-m-d').'.db')
+            Attachment::fromPath($this->filePath)
+                ->as(date('Y-m-d').'.sql')
         ];
     }
 }

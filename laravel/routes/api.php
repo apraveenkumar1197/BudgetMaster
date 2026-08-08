@@ -17,7 +17,6 @@ use App\Http\Controllers\ReturnsController;
 use App\Http\Controllers\SetupController;
 use App\Http\Controllers\TallyController;
 use App\Http\Controllers\UserController;
-use App\Http\Middleware\SetSqliteConfigMiddleware;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -44,7 +43,7 @@ Route::prefix('auth')->group(function () {
     });
 });
 
-Route::middleware(['auth:api', SetSqliteConfigMiddleware::class])->group(function () {
+Route::middleware(['auth:api'])->group(function () {
     Route::resource('reason', ReasonController::class, ['only' => ['index']]);
     Route::resource('category', CategoryController::class, ['only' => ['index']]);
     Route::resource('pay_mode', CategoryController::class, ['only' => ['index']]);

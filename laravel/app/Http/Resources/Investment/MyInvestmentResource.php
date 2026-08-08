@@ -20,7 +20,7 @@ class MyInvestmentResource extends JsonResource
         $investmentReturn = Ledger::incomes()
             ->investmentReturns()
             ->reason($this->name)
-            ->selectRaw("*,sum(credit) as amount")
+            ->selectRaw("sum(credit) as amount")
             ->groupBy('name')
             ->first();
         if($investmentReturn != null){

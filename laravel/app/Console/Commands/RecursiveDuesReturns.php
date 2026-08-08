@@ -2,11 +2,8 @@
 
 namespace App\Console\Commands;
 
-use App\Models\User;
-use App\Services\DB\SqliteSetup;
 use App\Services\RecursiveDuesReturnsProcessor;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Log;
 
 class RecursiveDuesReturns extends Command
 {
@@ -31,11 +28,7 @@ class RecursiveDuesReturns extends Command
      */
     public function handle()
     {
-        User::all()->each(function ($user) {
-            new SqliteSetup($user);
-            (new RecursiveDuesReturnsProcessor())->process();
-
-        });
+        (new RecursiveDuesReturnsProcessor())->process();
         return Command::SUCCESS;
     }
 }

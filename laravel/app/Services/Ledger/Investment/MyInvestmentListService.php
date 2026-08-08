@@ -21,12 +21,12 @@ class MyInvestmentListService
 
         $myInvestments = Ledger::expenses()
             ->investmentsAndSavings()
-            ->selectRaw("*,sum(debit) as amount")
+            ->selectRaw("name, MAX(sub_category) as sub_category, sum(debit) as amount")
             ->groupBy('name')
             ->get();
         $investmentReturns = Ledger::incomes()
             ->investmentsAndSavingsReturns()
-            ->selectRaw("*,sum(credit) as amount")
+            ->selectRaw("name, sum(credit) as amount")
             ->groupBy('name')
             ->get();
         $investmentHideIds = InvestmentHide::all()->pluck('investment_reason');
