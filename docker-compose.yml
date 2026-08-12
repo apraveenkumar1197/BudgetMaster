@@ -27,8 +27,6 @@ services:
       dockerfile: Dockerfile
     container_name: budgetmaster_php
     restart: unless-stopped
-    env_file:
-      - ./laravel/.env
     environment:
       APP_ENV: ${APP_ENV:-production}
       APP_DEBUG: ${APP_DEBUG:-false}
