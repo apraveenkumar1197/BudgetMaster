@@ -1,3 +1,9 @@
+# ── LOCAL DEVELOPMENT ──────────────────────────────────────────────────────────
+# Builds laravel-php/react-app from source and runs a local MySQL container.
+# Run standalone: `docker compose up -d` (auto-merges docker-compose.override.yml).
+# For production, use docker-compose.prod.yml instead — it is a fully separate,
+# standalone file (prebuilt Docker Hub images, no db service) and is never
+# combined with this file.
 services:
 
   # ── MySQL (Laravel users / auth tables) ─────────────────────────────────────
@@ -28,6 +34,7 @@ services:
     container_name: budgetmaster_php
     restart: unless-stopped
     environment:
+      APP_KEY: ${APP_KEY}
       APP_ENV: ${APP_ENV:-production}
       APP_DEBUG: ${APP_DEBUG:-false}
       APP_URL: ${APP_URL:-http://localhost:8080}

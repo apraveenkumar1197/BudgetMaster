@@ -1,17 +1,63 @@
+# ── PRODUCTION ───────────────────────────────────────────────────────────────
+# Fully standalone — do NOT combine with docker-compose.yml. Pulls prebuilt
+# images from Docker Hub and connects to an external MySQL server (no db
+# service is defined here). Run: `docker compose -f docker-compose.prod.yml up -d`
 services:
 
+  # ── Laravel PHP-FPM (prebuilt image) ────────────────────────────────────────
   laravel-php:
-    build: !reset null
-    image: ${API_IMAGE:-docker.io/yourusername/budgetmaster-api}:${API_IMAGE_TAG:-latest}
+    image: ${API_IMAGE:-docker.io/apraveenkumar1197/budgetmaster-api}:${API_IMAGE_TAG:-latest}
+    container_name: budgetmaster_php
+    restart: unless-stopped
+    environment:
+      APP_KEY: ${APP_KEY}
+      APP_ENV: ${APP_ENV:-production}
+      APP_DEBUG: ${APP_DEBUG:-false}
+      APP_URL: ${APP_URL:-http://localhost:8080}
+      DB_CONNECTION: mysql
+      DB_HOST: ${DB_HOST}
+      DB_PORT: ${DB_PORT:-3306}
+      DB_DATABASE: ${DB_DATABASE:-budgetmaster}
+      DB_USERNAME: ${DB_USERNAME:-budgetmaster}
+      DB_PASSWORD: ${DB_PASSWORD}
+      ROOT_PATH: ${ROOT_PATH:-http://laravel-nginx/}
+    volumes:
+      - laravel_storage:/var/www/storage
+      # Also mounted here (not just on nginx) so the named volume gets
+      # populated from this image's /var/www/public on first start.
+      - laravel_public:/var/www/public
+    networks:
+      - budgetmaster
 
+  # ── Nginx (Laravel API) ──────────────────────────────────────────────────────
   laravel-nginx:
+    image: nginx:alpine
+    container_name: budgetmaster_api
+    restart: unless-stopped
+    ports:
+      - "${API_PORT:-8080}:80"
     volumes:
       - laravel_public:/var/www/public:ro
       - ./docker/nginx/laravel.conf:/etc/nginx/conf.d/default.conf:ro
+    networks:
+      - budgetmaster
+    depends_on:
+      - laravel-php
 
+  # ── React SPA (prebuilt image) ───────────────────────────────────────────────
   react-app:
-    build: !reset null
-    image: ${FRONTEND_IMAGE:-docker.io/yourusername/budgetmaster-frontend}:${FRONTEND_IMAGE_TAG:-latest}
+    image: ${FRONTEND_IMAGE:-docker.io/apraveenkumar1197/budgetmaster-frontend}:${FRONTEND_IMAGE_TAG:-latest}
+    container_name: budgetmaster_frontend
+    restart: unless-stopped
+    ports:
+      - "${FRONTEND_PORT:-80}:80"
+    networks:
+      - budgetmaster
+
+networks:
+  budgetmaster:
+    driver: bridge
 
 volumes:
+  laravel_storage:
   laravel_public:
