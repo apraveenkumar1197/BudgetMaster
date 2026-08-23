@@ -19,14 +19,14 @@ services:
     volumes:
       - db_data:/var/lib/mysql
     networks:
-      - budgetmaster
+      - main
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${DB_ROOT_PASSWORD:-secret}"]
       interval: 10s
       timeout: 5s
       retries: 5
 
-  # ── Laravel PHP-FPM ──────────────────────────────────────────────────────────
+  # ── Laravel (Octane/RoadRunner) ───────────────────────────────────────────────
   laravel-php:
     build:
       context: ./laravel
@@ -45,10 +45,18 @@ services:
       DB_USERNAME: ${DB_USERNAME:-budgetmaster}
       DB_PASSWORD: ${DB_PASSWORD:-secret}
       ROOT_PATH: ${ROOT_PATH:-http://laravel-nginx/}
+      MAIL_MAILER: ${MAIL_MAILER:-smtp}
+      MAIL_HOST: ${MAIL_HOST:-smtp.mailgun.org}
+      MAIL_PORT: ${MAIL_PORT:-587}
+      MAIL_USERNAME: ${MAIL_USERNAME}
+      MAIL_PASSWORD: ${MAIL_PASSWORD}
+      MAIL_ENCRYPTION: ${MAIL_ENCRYPTION:-tls}
+      MAIL_FROM_ADDRESS: ${MAIL_FROM_ADDRESS:-hello@example.com}
+      MAIL_FROM_NAME: ${MAIL_FROM_NAME:-BudgetMaster}
     volumes:
       - laravel_storage:/var/www/storage
     networks:
-      - budgetmaster
+      - main
     depends_on:
       db:
         condition: service_healthy
@@ -64,7 +72,7 @@ services:
       - ./laravel/public:/var/www/public:ro
       - ./docker/nginx/laravel.conf:/etc/nginx/conf.d/default.conf:ro
     networks:
-      - budgetmaster
+      - main
     depends_on:
       - laravel-php
 
@@ -80,11 +88,12 @@ services:
     ports:
       - "${FRONTEND_PORT:-80}:80"
     networks:
-      - budgetmaster
+      - main
 
 networks:
-  budgetmaster:
-    driver: bridge
+  main:
+    name: main
+    external: true
 
 volumes:
   db_data:
