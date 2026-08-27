@@ -18,7 +18,7 @@ class StorageListService
 
     public function get()
     {
-        $storages = Storage::whereNotIn('id', [7])->get();
+        $storages = Storage::whereNotIn('id', [7])->orderBy('sort_order')->get();
         $allStorages = collect($storages->map(function ($storage) {
             return [
                 'id' => $storage->id,

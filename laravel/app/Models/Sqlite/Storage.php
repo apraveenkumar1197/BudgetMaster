@@ -18,7 +18,7 @@ class Storage extends Model
 
     public $timestamps = false;
 
-    protected $fillable = ['name', 'amount'];
+    protected $fillable = ['name', 'amount', 'sort_order'];
 
     function getAmount($fromDate, $toDate){
         $payModes = $this->hasMany(PayMode::class)->pluck('id');
