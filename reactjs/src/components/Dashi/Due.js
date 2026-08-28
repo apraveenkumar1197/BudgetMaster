@@ -23,7 +23,7 @@ export const Due = (props) => {
                     <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>{props.dues.reason}</Typography>
                     <Typography variant="body2" color="text.secondary">{props.dues.count}</Typography>
                 </Stack>
-                <Button variant="contained" size="large" sx={{ whiteSpace: 'nowrap' }}>
+                <Button variant="contained" size="large" sx={{ whiteSpace: 'nowrap', fontSize: '1.5rem', px: 4, py: 1.5 }}>
                     Rs {formatter.format(props.dues.amount)}
                 </Button>
             </Stack>
