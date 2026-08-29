@@ -132,7 +132,7 @@ docker exec budgetmaster_php php artisan passport:install
 | Container | Image | Exposed port |
 |---|---|---|
 | `budgetmaster_db` | mysql:8.0 | internal only |
-| `budgetmaster_php` | php:8.2-fpm (local build) | internal only |
+| `budgetmaster_php` | php:8.2 + Laravel Octane/RoadRunner (local build) | internal only (8000) |
 | `budgetmaster_api` | nginx:alpine | 8080 |
 | `budgetmaster_frontend` | nginx:alpine (React build) | 3000 |
 
@@ -155,8 +155,9 @@ docker compose logs -f react-app
 # Run artisan commands
 docker exec budgetmaster_php php artisan <command>
 
-# Production mode (uses registry images instead of local build)
-docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d
+# Production mode (separate, standalone file — registry images, no db
+# container; connects to an external MySQL via DB_HOST/DB_PASSWORD)
+docker compose -f docker-compose.prod.yml up -d
 ```
 
 ### Volumes
@@ -247,7 +248,7 @@ Create each of the following:
 | Secret text | `laravel-app-key` | Laravel `APP_KEY` (output of `php artisan key:generate --show`) |
 | Secret text | `laravel-oauth-client-id` | Passport personal access client ID |
 | Secret text | `laravel-oauth-client-secret` | Passport personal access client secret |
-| Secret text | `db-root-password` | MySQL root password |
+| Secret text | `db-host` | Hostname/IP of the external MySQL server (production runs no db container) |
 | Secret text | `db-password` | MySQL app-user password |
 | Secret text | `react-api-base-url` | Full URL of the API, e.g. `http://yourdomain.com:8080/api/` |
 
