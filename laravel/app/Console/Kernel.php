@@ -16,6 +16,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
          $schedule->command('backup:db')->daily();
+         $schedule->command('recursive:create')->monthlyOn(1, '00:00');
     }
 
     /**

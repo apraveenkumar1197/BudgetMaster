@@ -47,5 +47,8 @@ EXPOSE 8000
 
 ENTRYPOINT ["docker/entrypoint.sh"]
 
-# Start Octane (Swoole); entrypoint.sh also starts cron for the scheduler
-CMD ["php", "artisan", "octane:start", "--server=swoole", "--host=0.0.0.0", "--port=8000"]
+# Start Octane (Swoole); entrypoint.sh also starts cron for the scheduler.
+# --workers pinned explicitly rather than left on Octane's "auto" (CPU-count)
+# default, which is environment-dependent and can silently be too small (risking
+# self-request deadlocks) or too large (excess memory) depending on the host.
+CMD ["php", "artisan", "octane:start", "--server=swoole", "--host=0.0.0.0", "--port=8000", "--workers=4"]

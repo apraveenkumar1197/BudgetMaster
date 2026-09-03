@@ -29,7 +29,7 @@ class ValidateLoginOTPService {
             ];
         }
 
-        $authResponseData = $this->login($this->email,$this->otp);
+        $authResponseData = $this->login($this->email, $this->otp);
         $authResponseDataBody = json_decode($authResponseData->getBody()->getContents(),true);
 
         $authResponseDataBody['is_registration_completed'] = Setting::isRegistered();

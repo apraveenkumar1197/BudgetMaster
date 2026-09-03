@@ -7,6 +7,7 @@ pipeline {
         DOCKER_REGISTRY  = "${env.DOCKER_REGISTRY ?: 'docker.io/yourusername'}"
         API_IMAGE        = "${DOCKER_REGISTRY}/budgetmaster-api"
         FRONTEND_IMAGE   = "${DOCKER_REGISTRY}/budgetmaster-frontend"
+        NGINX_IMAGE      = "${DOCKER_REGISTRY}/budgetmaster-nginx"
         IMAGE_TAG        = "${BUILD_NUMBER}"
     }
 
@@ -89,6 +90,11 @@ pipeline {
                           -t ${FRONTEND_IMAGE}:${IMAGE_TAG} \
                           -t ${FRONTEND_IMAGE}:latest \
                           ./reactjs
+
+                        docker build \
+                          -t ${NGINX_IMAGE}:${IMAGE_TAG} \
+                          -t ${NGINX_IMAGE}:latest \
+                          ./docker/nginx
                     '''
                 }
             }
@@ -113,6 +119,9 @@ pipeline {
 
                         docker push ${FRONTEND_IMAGE}:${IMAGE_TAG}
                         docker push ${FRONTEND_IMAGE}:latest
+
+                        docker push ${NGINX_IMAGE}:${IMAGE_TAG}
+                        docker push ${NGINX_IMAGE}:latest
                     '''
                 }
             }
@@ -130,7 +139,7 @@ pipeline {
                     string(credentialsId: 'laravel-app-key',          variable: 'APP_KEY'),
                     string(credentialsId: 'laravel-oauth-client-id',  variable: 'OAUTH_CLIENT_ID'),
                     string(credentialsId: 'laravel-oauth-client-secret', variable: 'OAUTH_CLIENT_SECRET'),
-                    string(credentialsId: 'db-root-password',         variable: 'DB_ROOT_PASSWORD'),
+                    string(credentialsId: 'db-host',                  variable: 'DB_HOST'),
                     string(credentialsId: 'db-password',              variable: 'DB_PASSWORD'),
                     string(credentialsId: 'react-api-base-url',       variable: 'REACT_APP_API_BASE_URL'),
                     usernamePassword(
@@ -147,7 +156,7 @@ APP_KEY=${APP_KEY}
 APP_DEBUG=false
 APP_URL=http://${DEPLOY_HOST:-localhost}:8080
 DB_DATABASE=budgetmaster
-DB_ROOT_PASSWORD=${DB_ROOT_PASSWORD}
+DB_HOST=${DB_HOST}
 DB_USERNAME=budgetmaster
 DB_PASSWORD=${DB_PASSWORD}
 OAUTH_CLIENT_ID=${OAUTH_CLIENT_ID}
@@ -155,6 +164,7 @@ OAUTH_CLIENT_SECRET=${OAUTH_CLIENT_SECRET}
 REACT_APP_API_BASE_URL=${REACT_APP_API_BASE_URL}
 API_IMAGE_TAG=${IMAGE_TAG}
 FRONTEND_IMAGE_TAG=${IMAGE_TAG}
+NGINX_IMAGE_TAG=${IMAGE_TAG}
 EOF
                     '''
 
@@ -166,8 +176,7 @@ EOF
                         # Ensure deploy directory exists
                         $SSH_CMD "mkdir -p ~/budgetmaster"
 
-                        # Copy compose files
-                        scp $SCP_OPTS docker-compose.yml          ${SSH_USER}@${DEPLOY_HOST}:~/budgetmaster/docker-compose.yml
+                        # Copy compose files (prod runs standalone — docker-compose.yml is dev-only, not needed here)
                         scp $SCP_OPTS docker-compose.prod.yml     ${SSH_USER}@${DEPLOY_HOST}:~/budgetmaster/docker-compose.prod.yml
                         scp -r $SCP_OPTS docker/                  ${SSH_USER}@${DEPLOY_HOST}:~/budgetmaster/docker/
                         scp $SCP_OPTS deploy.env                  ${SSH_USER}@${DEPLOY_HOST}:~/budgetmaster/.env
@@ -176,8 +185,8 @@ EOF
                         $SSH_CMD "
                           cd ~/budgetmaster &&
                           echo '${DOCKER_PASS}' | docker login ${DOCKER_REGISTRY} -u '${DOCKER_USER}' --password-stdin &&
-                          docker compose -f docker-compose.yml -f docker-compose.prod.yml pull &&
-                          docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d --remove-orphans &&
+                          docker compose -f docker-compose.prod.yml pull &&
+                          docker compose -f docker-compose.prod.yml up -d --remove-orphans &&
                           docker image prune -f
                         "
                     '''
@@ -195,6 +204,8 @@ EOF
                 docker rmi ${API_IMAGE}:latest            || true
                 docker rmi ${FRONTEND_IMAGE}:${IMAGE_TAG} || true
                 docker rmi ${FRONTEND_IMAGE}:latest       || true
+                docker rmi ${NGINX_IMAGE}:${IMAGE_TAG}    || true
+                docker rmi ${NGINX_IMAGE}:latest          || true
                 rm -f deploy.env
             '''
         }
