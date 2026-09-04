@@ -1,0 +1,8 @@
+# Drives Laravel's own scheduler (see app/Console/Kernel.php for the actual
+# job frequencies — backup:db daily, recursive:create monthly). Must run every
+# minute; Laravel itself decides which commands are actually due.
+#
+# cron runs jobs with a minimal PATH that doesn't include /usr/local/bin
+# (where the official php image installs php), so the binary is called by
+# its full path here rather than relying on PATH.
+* * * * * www-data cd /var/www && /usr/local/bin/php artisan schedule:run >> /var/www/storage/logs/scheduler.log 2>&1
