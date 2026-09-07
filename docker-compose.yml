@@ -1,6 +1,6 @@
 # ── LOCAL DEVELOPMENT ──────────────────────────────────────────────────────────
 # Builds laravel-php/react-app from source and runs a local MySQL container.
-# Run standalone: `docker compose up -d` (auto-merges docker-compose.override.yml).
+# Run standalone: `docker compose up -d`.
 # For production, use docker-compose.prod.yml instead — it is a fully separate,
 # standalone file (prebuilt Docker Hub images, no db service) and is never
 # combined with this file.
@@ -16,6 +16,10 @@ services:
       MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-secret}
       MYSQL_USER: ${DB_USERNAME:-budgetmaster}
       MYSQL_PASSWORD: ${DB_PASSWORD:-secret}
+    ports:
+      # Host access for local dev tooling (MySQL GUI clients, CLI, etc.) — not
+      # exposed in prod, which uses an external MySQL server, not this container.
+      - "${DB_DEV_PORT:-3308}:3306"
     volumes:
       - db_data:/var/lib/mysql
     networks:
