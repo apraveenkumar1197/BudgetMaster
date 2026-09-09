@@ -29,6 +29,10 @@ services:
       MAIL_ENCRYPTION: ${MAIL_ENCRYPTION:-tls}
       MAIL_FROM_ADDRESS: ${MAIL_FROM_ADDRESS:-hello@example.com}
       MAIL_FROM_NAME: ${MAIL_FROM_NAME:-BudgetMaster}
+      BACKUP_DRIVER: ${BACKUP_DRIVER:-email}
+      DROPBOX_CLIENT_ID: ${DROPBOX_CLIENT_ID}
+      DROPBOX_CLIENT_SECRET: ${DROPBOX_CLIENT_SECRET}
+      DROPBOX_REFRESH_TOKEN: ${DROPBOX_REFRESH_TOKEN}
     volumes:
       - laravel_storage:/var/www/storage
       # Also mounted here (not just on nginx) so the named volume gets

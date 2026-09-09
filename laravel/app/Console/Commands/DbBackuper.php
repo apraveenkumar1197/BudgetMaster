@@ -6,6 +6,7 @@ use App\Mail\DbBackupMailer;
 use App\Models\User;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Storage;
 use Symfony\Component\Process\Process;
 
 class DbBackuper extends Command
@@ -31,9 +32,15 @@ class DbBackuper extends Command
      */
     public function handle()
     {
-        $user = User::first();
-        if (!$user) {
-            return Command::SUCCESS;
+        $driver = env('BACKUP_DRIVER', 'email');
+
+        // Dropbox doesn't need a recipient; email does. Only require a user
+        // to exist when we're actually going to email them the dump.
+        if ($driver !== 'dropbox') {
+            $user = User::first();
+            if (!$user) {
+                return Command::SUCCESS;
+            }
         }
 
         $connection = config('database.connections.mysql');
@@ -63,7 +70,14 @@ class DbBackuper extends Command
             return Command::FAILURE;
         }
 
-        Mail::to($user->email)->send(new DbBackupMailer($dumpPath));
+        if ($driver === 'dropbox') {
+            Storage::disk('dropbox')->put(
+                '/' . basename($dumpPath),
+                file_get_contents($dumpPath)
+            );
+        } else {
+            Mail::to($user->email)->send(new DbBackupMailer($dumpPath));
+        }
 
         unlink($dumpPath);
 

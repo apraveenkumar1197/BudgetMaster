@@ -56,6 +56,18 @@ return [
             'throw' => false,
         ],
 
+        // Custom driver registered via Storage::extend() in AppServiceProvider.
+        // Uses an OAuth app key/secret + refresh token (not a static access
+        // token) so the token used for each upload keeps renewing itself —
+        // required for an unattended cron job with no one around to refresh
+        // a short-lived token by hand.
+        'dropbox' => [
+            'driver' => 'dropbox',
+            'client_id' => env('DROPBOX_CLIENT_ID'),
+            'client_secret' => env('DROPBOX_CLIENT_SECRET'),
+            'refresh_token' => env('DROPBOX_REFRESH_TOKEN'),
+        ],
+
     ],
 
     /*
