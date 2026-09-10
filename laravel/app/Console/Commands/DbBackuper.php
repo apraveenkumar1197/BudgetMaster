@@ -39,7 +39,7 @@ class DbBackuper extends Command
         if ($driver !== 'dropbox') {
             $user = User::first();
             if (!$user) {
-                return Command::SUCCESS;
+                return Command::FAILURE;
             }
         }
 
@@ -71,10 +71,15 @@ class DbBackuper extends Command
         }
 
         if ($driver === 'dropbox') {
-            Storage::disk('dropbox')->put(
-                '/' . basename($dumpPath),
+            $uploaded = Storage::disk('dropbox')->put(
+                '/DB Backups/BudgetMaster/' . basename($dumpPath),
                 file_get_contents($dumpPath)
             );
+
+            if (!$uploaded) {
+                $this->error('Dropbox upload failed (put() returned false).');
+                return Command::FAILURE;
+            }
         } else {
             Mail::to($user->email)->send(new DbBackupMailer($dumpPath));
         }

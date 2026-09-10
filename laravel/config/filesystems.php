@@ -66,6 +66,10 @@ return [
             'client_id' => env('DROPBOX_CLIENT_ID'),
             'client_secret' => env('DROPBOX_CLIENT_SECRET'),
             'refresh_token' => env('DROPBOX_REFRESH_TOKEN'),
+            // Unlike local/s3 above, this must throw: a silently-swallowed
+            // failure on a backup upload is exactly the failure mode you
+            // can't afford to not notice.
+            'throw' => true,
         ],
 
     ],
