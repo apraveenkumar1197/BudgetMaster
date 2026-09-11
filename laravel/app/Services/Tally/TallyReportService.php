@@ -2,12 +2,12 @@
 
 namespace App\Services\Tally;
 
-use App\Enum\LedgerType;
 use App\Models\Sqlite\CreditCard;
 use App\Models\Sqlite\Ledger;
 use App\Models\Sqlite\Master\PayMode;
 use App\Models\Sqlite\Storage;
 use App\Services\ServiceResponse;
+use App\Services\Storage\StorageListService;
 use App\Traits\UtilTrait;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -27,34 +27,48 @@ class TallyReportService
 
     function report()
     {
+        $months = $this->getAllMonths($this->fromMonth, $this->toMonth);
+        $cashFlow = $this->ledger($this->fromMonth, $this->toMonth)->keyBy('month');
+
         $tallyReport = [];
-        $opening = $this->opening($this->fromMonth);
-        $creditCards = $this->getCreditCards($this->fromMonth, $this->toMonth);
-        foreach ($this->ledger($this->fromMonth, $this->toMonth) as $ledger) {
-            $creditCardCredit = 0;
-            if(isset($creditCards[$ledger->month]))
-                $creditCardCredit = $creditCards[$ledger->month];
-            $credit = $ledger->credit;
-            //$closing = $opening + ($credit - $creditCardCredit) - $ledger->debit;
-            $closing = $opening + $credit - $ledger->debit;
+        $opening = $this->closingAsOf(
+            Carbon::parse($this->fromMonth)->subMonthNoOverflow()->endOfMonth()->format('Y-m-d')
+        );
+
+        foreach ($months as $month) {
+            $closing = $this->closingAsOf(Carbon::parse($month)->endOfMonth()->format('Y-m-d'));
+            $monthLedger = $cashFlow->get($month);
 
             $tallyReport[] = [
-                'month' => $ledger->month,
+                'month' => $this->formatMonth ? Carbon::parse($month)->format('M Y') : $month,
                 'opening' => $opening,
-                'expense' => $ledger->debit,
-                'income' => $credit,
-                'closing' => $closing
+                'expense' => $monthLedger->debit ?? 0,
+                'income' => $monthLedger->credit ?? 0,
+                'closing' => $closing,
             ];
+
             $opening = $closing;
         }
-        return (new ServiceResponse())->setData(collect($this->fillTallyEntries($tallyReport)));
+
+        return (new ServiceResponse())->setData(collect($tallyReport));
     }
 
-    private function opening($fromMonth)
+    /**
+     * Net worth as of a given date. Delegates to StorageListService — the
+     * exact same calculation the Storage page's total uses — rather than
+     * re-deriving it from raw ledger sums, so Tally/Chart and the Storage
+     * page can never drift apart into disagreeing about "closing" again.
+     */
+    private function closingAsOf($asOfDate)
     {
-        return Ledger::ledger()->whereRaw("DATE_FORMAT(date, '%Y-%m') < ?", [$fromMonth])->selectRaw("IFNULL(sum(IFNULL(credit, 0)) - sum(IFNULL(debit, 0)), 0) as amount")->first()->amount;
+        return (new StorageListService(null, $asOfDate))->get()->getData()['total'];
     }
 
+    /**
+     * Cash-flow figures (income/expense) shown alongside opening/closing —
+     * these are informational only and no longer used to derive closing,
+     * which now comes from actual storage balances via closingAsOf().
+     */
     private function ledger($fromMonth, $toMonth)
     {
         $creditCardNames = CreditCard::pluck('name');
@@ -68,49 +82,5 @@ class TallyReportService
             ->orderBy('month')
             ->groupBy(DB::raw('month'))
             ->get();
-    }
-
-    function getCreditCards($fromMonth, $toMonth)
-    {
-        $creditCardNames = CreditCard::pluck('name');
-        $creditCardStorgeIds = Storage::whereIn('name', $creditCardNames)->pluck('id');
-        $payModeIds = PayMode::whereIn('storage_id', $creditCardStorgeIds)->pluck('id');
-
-        return Ledger::ledger()
-            ->whereIn('pay_mode', $payModeIds)
-            ->whereRaw("DATE_FORMAT(date, '%Y-%m') between ? and ?", [$fromMonth, $toMonth])
-            ->selectRaw("DATE_FORMAT(date, '%Y-%m') as month, sum(debit) - sum(credit) as credit")
-            ->orderBy('month')
-            ->groupBy(DB::raw('month'))
-            ->pluck('credit', 'month')
-            ->toArray();
-    }
-
-    private function fillTallyEntries($tallyEntries)
-    {
-        $tallyEntries = collect($tallyEntries);
-        $entries = [];
-        $months = $this->getAllMonths($this->fromMonth, $this->toMonth);
-        $opening = $tallyEntries->first()['opening'];
-        $closing = $opening;
-        for ($i = 0; $i < count($months); $i++) {
-            $entry = $tallyEntries->where('month', $months[$i])->first();
-            $entryFormatted = $entry != null ? $entry : [
-                'month' => $months[$i],
-                'opening' => $opening,
-                'expense' => 0,
-                'income' => 0,
-                'closing' => $closing
-            ];
-
-            if ($this->formatMonth)
-                $entryFormatted['month'] = Carbon::parse($months[$i])->format('M Y');
-
-            $entries[] = $entryFormatted;
-
-            $closing = $entry != null ? $entry['closing'] : $closing;
-            $opening = $closing;
-        }
-        return $entries;
     }
 }
