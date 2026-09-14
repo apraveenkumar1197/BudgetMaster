@@ -61,6 +61,15 @@ export const Login = (props) => {
 
     }
 
+    const handleSubmit = (e) => {
+        e.preventDefault()
+        if (otpSectionDisplay === 'block') {
+            handleVerifyOtp()
+        } else {
+            handleGetOtp()
+        }
+    }
+
     const handleVerifyOtp = () => {
         setVerifyOtpLoading(true)
         LoginAPI.verifyOtp(email,otp)
@@ -113,7 +122,7 @@ export const Login = (props) => {
                 <Typography variant="body2" color="text.secondary" sx={{mb: 1}}>
                     Sign in to BudgetMaster
                 </Typography>
-                <Box component="form" noValidate sx={{width: '100%'}}>
+                <Box component="form" noValidate sx={{width: '100%'}} onSubmit={handleSubmit}>
                     <TextField
                         value={email}
                         onInput={(e)=>setEmail(e.target.value)}
@@ -127,12 +136,12 @@ export const Login = (props) => {
                         autoFocus/>
                     <Box mx={{ position: 'relative' }}>
                         <Button
+                            type="submit"
                             disabled={sendOtpLoading}
                             style={{display: getOtpButtonDisplay}}
                             fullWidth
                             sx={{ mt: 3, mb: 2 }}
-                            variant="contained"
-                            onClick={handleGetOtp}>
+                            variant="contained">
                             Get OTP
                         </Button>
                         {sendOtpLoading && (
@@ -181,11 +190,11 @@ export const Login = (props) => {
                         </Box>*/}
                         <Box mx={{ position: 'relative' }}>
                             <Button
+                                type="submit"
                                 disabled={verifyOtpLoading}
                                 fullWidth
                                 variant="contained"
-                                sx={{ mt: 3, mb: 2 }}
-                                onClick={handleVerifyOtp}>
+                                sx={{ mt: 3, mb: 2 }}>
                                 Sign In
                             </Button>
                             {verifyOtpLoading && (
