@@ -5,8 +5,6 @@ import { SmallOutlinedTextBox } from "../../ui/SmallOutlinedTextBox";
 import { IncomeList } from "./IncomeList";
 import Income from "../../repo/Income";
 import React from "react";
-import Util from "../../functionalities/Util";
-import Expense from "../../repo/Expense";
 import DateUtil from "../../functionalities/DateUtil";
 import Box from "@mui/material/Box";
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
@@ -147,6 +145,15 @@ export const AddIncome = (props) => {
             setIncomeSubCategories([]);
         }
     }
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        if (incomeUpdate) {
+            updateIncome();
+        } else {
+            addIncome();
+        }
+    }
+
     const resetForm = () => {
         setIncomeId(null);
         setIncomeReason('');
@@ -171,6 +178,7 @@ export const AddIncome = (props) => {
                     Add Income
                 </Typography>
 
+                <Box component="form" noValidate onSubmit={handleSubmit}>
                 {/* Date Picker with Navigation */}
                 <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
                     <IconButton size="small" onClick={() => {
@@ -354,6 +362,7 @@ export const AddIncome = (props) => {
                 {/* Action Buttons */}
                 <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
                     <Button
+                        type="button"
                         variant="text"
                         onClick={resetForm}
                         size="small"
@@ -364,9 +373,9 @@ export const AddIncome = (props) => {
                         incomeUpdate ?
                             <Box sx={{ position: 'relative', flex: 1 }}>
                                 <Button
+                                    type="submit"
                                     variant="contained"
                                     disabled={loading}
-                                    onClick={updateIncome}
                                     fullWidth
                                     size="large"
                                 >
@@ -385,15 +394,16 @@ export const AddIncome = (props) => {
                                 )}
                             </Box> :
                             <LoadingButton
+                                type="submit"
                                 variant="contained"
                                 disabled={loading}
-                                onClick={addIncome}
                                 size="large"
                                 sx={{ flex: 1 }}
                             >
                                 Add Income
                             </LoadingButton>
                     }
+                </Box>
                 </Box>
             </Paper>
         </Grid>

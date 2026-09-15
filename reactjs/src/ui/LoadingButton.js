@@ -2,10 +2,10 @@ import {Button, CircularProgress, Fade} from "@mui/material";
 import Box from "@mui/material/Box";
 import React from "react";
 
-export const LoadingButton = (props) => {
+export const LoadingButton = ({children, onClick, disabled, type = 'button', ...rest}) => {
     return <Box sx={{m: 1, position: 'relative', display: 'inline-block'}}>
-        <Button variant="contained" disabled={props.disabled} onClick={props.onClick}>{props.children}</Button>
-        <Fade in={!!props.disabled} unmountOnExit>
+        <Button variant="contained" type={type} disabled={disabled} onClick={onClick} {...rest}>{children}</Button>
+        <Fade in={!!disabled} unmountOnExit>
             <CircularProgress
                 sx={{
                     position: 'absolute',
