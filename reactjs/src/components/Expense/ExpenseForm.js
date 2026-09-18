@@ -83,6 +83,11 @@ export const ExpenseForm = ({ initialData, currentDate, onSubmitSuccess, onCance
         if (onCancel) onCancel();
     }
 
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        submitExpense();
+    }
+
     const submitExpense = () => {
         if (loading) return;
         setLoading(true);
@@ -171,7 +176,7 @@ export const ExpenseForm = ({ initialData, currentDate, onSubmitSuccess, onCance
     }, [initialData, expenseSubCategoryData]);
 
     return (
-        <Box>
+        <Box component="form" noValidate onSubmit={handleSubmit}>
             <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
                 <IconButton size="small" onClick={() => dateBackWard()}>
                     <ArrowBackIosIcon fontSize="small" />
@@ -274,12 +279,12 @@ export const ExpenseForm = ({ initialData, currentDate, onSubmitSuccess, onCance
             </Grid>
 
             <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
-                <Button variant="text" onClick={resetForm} size="small">Reset</Button>
+                <Button type="button" variant="text" onClick={resetForm} size="small">Reset</Button>
                 <Box sx={{ position: 'relative', flex: 1 }}>
                     <LoadingButton
+                        type="submit"
                         variant="contained"
                         disabled={loading}
-                        onClick={submitExpense}
                         fullWidth
                         size="large"
                     >
