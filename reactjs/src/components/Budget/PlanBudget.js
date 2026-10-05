@@ -1,10 +1,7 @@
 import React from "react";
-import Tally from "../../repo/Tally";
 import Util from "../../functionalities/Util";
 import {
     Autocomplete,
-    Button,
-    CircularProgress,
     Grid,
     IconButton,
     Paper,
@@ -39,6 +36,7 @@ import { Dialog, DialogContent, DialogTitle } from "@mui/material";
 import { ExpenseForm } from "../Expense/ExpenseForm";
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import dayjs from "dayjs";
 
 
 const reorder = (list, startIndex, endIndex) => {
@@ -164,8 +162,13 @@ export const PlanBudget = (props) => {
     }
 
     const editBudgetEntry = (budget) => {
-        setBudgetId(budget.id)
-        let selectedSubcategoriesData = budgetSubCategoryData[budget.category.name];
+        setBudgetId(budget.id);
+        if (budget.month) {
+            setBudgetDate(dayjs(budget.month).toDate());
+        } else if (budget.date) {
+            setBudgetDate(dayjs(budget.date).toDate());
+        }
+        let selectedSubcategoriesData = budget.category != null ? budgetSubCategoryData[budget.category.name] : [];
         setBudgetReason(budget.reason != null ? budget.reason.name : '');
         setBudgetCategory(budget.category != null ? budget.category.name : '');
         setBudgetSubCategory(budget.subCategory != null ? budget.subCategory.name : '');
