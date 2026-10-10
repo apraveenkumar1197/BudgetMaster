@@ -12,6 +12,7 @@ import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import KeyboardDoubleArrowLeftIcon from '@mui/icons-material/KeyboardDoubleArrowLeft';
 import KeyboardDoubleArrowRightIcon from '@mui/icons-material/KeyboardDoubleArrowRight';
 import { LoadingButton } from "../../ui/LoadingButton";
+import dayjs from "dayjs";
 
 export const AddIncome = (props) => {
 
@@ -96,8 +97,11 @@ export const AddIncome = (props) => {
             });
     }
     const editIncome = (income) => {
-        setIncomeId(income.id)
-        let selectedSubcategoriesData = incomeSubCategoryData[income.category.name];
+        setIncomeId(income.id);
+        if (income.date) {
+            setIncomeDate(dayjs(income.date).toDate());
+        }
+        let selectedSubcategoriesData = income.category != null ? incomeSubCategoryData[income.category.name] : [];
         setIncomeReason(income.reason != null ? income.reason.name : '');
         setIncomeCategory(income.category != null ? income.category.name : '');
         setIncomeSubCategory(income.subCategory != null ? income.subCategory.name : '');
@@ -111,7 +115,7 @@ export const AddIncome = (props) => {
         if (loading) return;
 
         setLoading(true)
-        Income.updateIncome(incomeId, incomeDate, incomeReason, incomeCategory, incomeSubCategory, incomeDescription, incomeAmount, incomePayMode)
+        Income.updateIncome(incomeId, (new DateUtil(incomeDate)).mySQLDate(), incomeReason, incomeCategory, incomeSubCategory, incomeDescription, incomeAmount, incomePayMode)
             .then((res) => {
                 getIncomeList()
                 props.setSnackbarMessage(res.data.msg)
@@ -165,10 +169,12 @@ export const AddIncome = (props) => {
         setIncomeUpdate(false);
     }
 
+    const incomeMonth = new DateUtil(incomeDate).mySQLMonth();
+
     React.useEffect(() => {
         getIncomeInitData()
         getIncomeList();
-    }, [incomeDate]);
+    }, [incomeMonth]);
 
     return <Grid container spacing={2} sx={{ p: 2, height: { xs: 'auto', md: 'calc(100vh - 100px)' }, overflow: 'hidden' }}>
         {/* Left Column - Form */}
