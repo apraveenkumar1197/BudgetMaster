@@ -294,12 +294,14 @@ export const PlanBudget = (props) => {
         getBudgetList()
     }, []);
 
+    const budgetMonth = new DateUtil(budgetDate).mySQLMonth();
+
     React.useEffect(() => {
         setBudgetListCategoryWise([])
         setSingleEntryTableView(individualFlag === 'Y')
         getBudgetList()
         getDuesList()
-    }, [budgetDate, individualFlag]);
+    }, [budgetMonth, individualFlag]);
 
     console.log(individualFlag);
     return <Grid container spacing={2} sx={{ p: 2, height: { xs: 'auto', md: 'calc(100vh - 100px)' }, overflow: 'hidden' }}>
