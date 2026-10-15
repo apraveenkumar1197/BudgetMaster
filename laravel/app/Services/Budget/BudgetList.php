@@ -48,6 +48,8 @@ class BudgetList
                     ],
                     'amount' => $budget->amount,
                     'id' => $budget->id,
+                    'month' => $budget->month,
+                    'date' => $budget->month ? $budget->month . '-01' : null,
                     'is_expense_added' => isset($reasonsByName[$budget->reason]) or $budget->amount == 0,
                     'colorFlag' => $this->colorFlag($budget->amount, $reasonsByName[$budget->reason] ?? [])
                 ];
