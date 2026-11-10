@@ -53,9 +53,9 @@ export const IncomeIndividualReport = (props) => {
         });
     }
 
-    const getSubcategoriesByCategoryId = () => {
-        if(category == null) return;
-        UtilRepo.getSubcategoriesByCategoryId('income', category.id, Util.mySQLDate(fromDate), Util.mySQLDate(toDate))
+    const getSubcategoriesByCategoryId = (categorySelected) => {
+        if(categorySelected == null || categorySelected.id == null) return;
+        UtilRepo.getSubcategoriesByCategoryId('income', categorySelected.id, Util.mySQLDate(fromDate), Util.mySQLDate(toDate))
             .then((res) => {
                 setIncomeReportSubCategories(res.data.data);
             }).catch((err) => {
@@ -134,7 +134,7 @@ export const IncomeIndividualReport = (props) => {
                 id="category_autocomplete"
                 disableClearable
                 options={incomeReportCategories}
-                onChange={(e, v) => {setCategory(v); getSubcategoriesByCategoryId();}}
+                onChange={(e, v) => {setCategory(v); getSubcategoriesByCategoryId(v);}}
                 getOptionLabel={(option) => option.category}
                 sx={{width: {xs: '100%', sm: 300}}}
                 renderInput={(params) => (
