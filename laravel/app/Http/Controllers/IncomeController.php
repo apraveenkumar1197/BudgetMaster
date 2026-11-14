@@ -8,7 +8,7 @@ use App\Services\Ledger\GetFillableDataService;
 use App\Services\Ledger\Income\AddIncomeService;
 use App\Services\Ledger\Income\DeleteIncomeService;
 use App\Services\Ledger\Income\GetAddIncomeInitDataService;
-use App\Services\Ledger\Income\IncomeByMonthService;
+use App\Services\Ledger\Income\IncomeListService;
 use App\Services\Ledger\Income\IndividualIncomeReport;
 use App\Services\Ledger\Income\UpdateIncomeService;
 use App\Validators\Expense\AddExpenseValidator;
@@ -44,9 +44,17 @@ class IncomeController extends Controller
         return $this->http_response((new DeleteIncomeService($id))->delete());
     }
 
-    function getByMonth($month)
+    function list(Request $request, string $period)
     {
-        return $this->http_response((new IncomeByMonthService($month))->get());
+        $validated = validator([
+            'filter' => $request->query('filter', 'month'),
+            'period' => $period,
+        ], [
+            'filter' => 'required|in:day,month',
+            'period' => $request->query('filter') === 'day' ? 'date_format:Y-m-d' : 'date_format:Y-m',
+        ])->validate();
+
+        return $this->http_response((new IncomeListService())->get($period, $validated['filter']));
     }
 
     function individualReport(Request $request)

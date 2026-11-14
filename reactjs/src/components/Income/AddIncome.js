@@ -1,4 +1,4 @@
-import { Autocomplete, Button, CircularProgress, Grid, IconButton, Paper, TextField, Typography } from "@mui/material";
+import { Autocomplete, Button, CircularProgress, Grid, IconButton, Paper, TextField, ToggleButton, ToggleButtonGroup, Typography } from "@mui/material";
 import { LocalizationProvider, MobileDatePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { SmallOutlinedTextBox } from "../../ui/SmallOutlinedTextBox";
@@ -34,12 +34,16 @@ export const AddIncome = (props) => {
     const [incomePayMode, setIncomePayMode] = React.useState('');
 
     const [incomeList, setIncomeList] = React.useState([]);
+    const [listFilter, setListFilter] = React.useState('month');
+    const [listRevision, setListRevision] = React.useState(0);
     const [listLoading, setListLoading] = React.useState(false);
     const [incomeAmountTotal, setIncomeAmountTotal] = React.useState('');
 
     const [loading, setLoading] = React.useState(false);
 
-    const getIncomeInitData = () => {
+    const { setSnackbarMessage, setOpenSnackbar } = props;
+
+    React.useEffect(() => {
         Income.getIncomeInitData()
             .then((res) => {
                 setIncomeReasons(res.data.data.reasons)
@@ -47,10 +51,10 @@ export const AddIncome = (props) => {
                 setIncomeSubCategoryData(res.data.data.subCategories)
                 setIncomePayModes(res.data.data.payModes)
             }).catch((err) => {
-                props.setSnackbarMessage(err.response.data.msg)
-                props.setOpenSnackbar(true)
+                setSnackbarMessage(err.response?.data?.msg ?? 'Could not load the income form.');
+                setOpenSnackbar(true);
             });
-    }
+    }, [setSnackbarMessage, setOpenSnackbar]);
     const getIncomeFillable = (reason) => {
         Income.fillable(reason)
             .then((res) => {
@@ -66,26 +70,37 @@ export const AddIncome = (props) => {
                 props.setOpenSnackbar(true)
             });
     }
-    const getIncomeList = () => {
+    const selectedDate = new DateUtil(incomeDate).mySQLDate();
+
+    React.useEffect(() => {
+        let active = true;
+        const period = listFilter === 'day' ? selectedDate : selectedDate.slice(0, 7);
+
         setListLoading(true);
-        Income.getIncomeList(new DateUtil(incomeDate).mySQLMonth())
+        Income.getIncomeList(period, listFilter)
             .then((res) => {
+                if (!active) return;
                 setIncomeList(res.data.data.list)
                 setIncomeAmountTotal(res.data.data.amount)
-                setListLoading(false);
             }).catch((err) => {
-                props.setSnackbarMessage(err.response.data.msg)
-                props.setOpenSnackbar(true)
-                setListLoading(false);
+                if (!active) return;
+                setIncomeList([]);
+                setIncomeAmountTotal(0);
+                setSnackbarMessage(err.response?.data?.msg ?? 'Could not load income entries.');
+                setOpenSnackbar(true);
+            }).finally(() => {
+                if (active) setListLoading(false);
             });
-    }
+
+        return () => { active = false; };
+    }, [selectedDate, listFilter, listRevision, setSnackbarMessage, setOpenSnackbar]);
     const addIncome = () => {
         if (loading) return;
 
         setLoading(true)
         Income.addIncome((new DateUtil(incomeDate)).mySQLDate(), incomeReason, incomeCategory, incomeSubCategory, incomeDescription, incomeAmount, incomePayMode)
             .then((res) => {
-                getIncomeList();
+                setListRevision(revision => revision + 1);
                 props.setSnackbarMessage(res.data.msg)
                 props.setOpenSnackbar(true)
                 resetForm()
@@ -117,7 +132,7 @@ export const AddIncome = (props) => {
         setLoading(true)
         Income.updateIncome(incomeId, (new DateUtil(incomeDate)).mySQLDate(), incomeReason, incomeCategory, incomeSubCategory, incomeDescription, incomeAmount, incomePayMode)
             .then((res) => {
-                getIncomeList()
+                setListRevision(revision => revision + 1);
                 props.setSnackbarMessage(res.data.msg)
                 props.setOpenSnackbar(true)
                 resetForm();
@@ -131,7 +146,7 @@ export const AddIncome = (props) => {
     const deleteIncome = (id) => {
         return Income.deleteIncome(id)
             .then((res) => {
-                getIncomeList()
+                setListRevision(revision => revision + 1);
                 props.setSnackbarMessage(res.data.msg)
                 props.setOpenSnackbar(true)
             }).catch((err) => {
@@ -168,13 +183,6 @@ export const AddIncome = (props) => {
         setIncomeSubCategory([]);
         setIncomeUpdate(false);
     }
-
-    const incomeMonth = new DateUtil(incomeDate).mySQLMonth();
-
-    React.useEffect(() => {
-        getIncomeInitData()
-        getIncomeList();
-    }, [incomeMonth]);
 
     return <Grid container spacing={2} sx={{ p: 2, height: { xs: 'auto', md: 'calc(100vh - 100px)' }, overflow: 'hidden' }}>
         {/* Left Column - Form */}
@@ -420,6 +428,17 @@ export const AddIncome = (props) => {
                 <Typography variant="h5" gutterBottom sx={{ mb: 3, fontWeight: 600 }}>
                     Income List
                 </Typography>
+                <ToggleButtonGroup
+                    size="small"
+                    exclusive
+                    value={listFilter}
+                    onChange={(_, filter) => { if (filter) setListFilter(filter); }}
+                    aria-label="Income list period"
+                    sx={{ alignSelf: 'flex-start', mb: 2 }}
+                >
+                    <ToggleButton value="day">Day</ToggleButton>
+                    <ToggleButton value="month">Month</ToggleButton>
+                </ToggleButtonGroup>
                 <Box sx={{ flex: 1, overflow: 'auto' }}>
                     <IncomeList
                         editIncome={editIncome}

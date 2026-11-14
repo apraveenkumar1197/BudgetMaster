@@ -268,7 +268,7 @@ export const PlanBudget = (props) => {
             category: budget.category != null ? budget.category.name : '',
             subCategory: budget.subCategory != null ? budget.subCategory.name : '',
             amount: budget.amount,
-            date: new DateUtil(budgetDate).mySQLMonth() + "-01" // Default to 1st of the month
+            date: new DateUtil().mySQLDate()
         });
         setOpenExpenseDialog(true);
     }

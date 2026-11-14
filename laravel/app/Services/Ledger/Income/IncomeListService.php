@@ -6,19 +6,12 @@ use App\Http\Resources\Ledger\Income\IncomeReportCollection;
 use App\Models\Sqlite\Ledger;
 use App\Services\ServiceResponse;
 
-class IncomeByMonthService
+class IncomeListService
 {
-    private $month;
-
-    function __construct($month)
+    function get(string $period, string $filter)
     {
-        $this->month = $month;
-    }
-
-    function get()
-    {
-        $incomes = Ledger::incomes()
-            ->month($this->month)
+        $query = Ledger::incomes();
+        $incomes = ($filter === 'day' ? $query->date($period) : $query->month($period))
             ->orderByDesc('date')
             ->get();
         return (new ServiceResponse())

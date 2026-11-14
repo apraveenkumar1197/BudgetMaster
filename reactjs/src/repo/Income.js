@@ -8,8 +8,8 @@ export default class Income {
     static fillable(reason){
         return Base.get('income/fillable?reason=' + reason)
     }
-    static getIncomeList(month) {
-        return Base.get('income/get/' + month)
+    static getIncomeList(period, filter = 'month') {
+        return Base.get(`income/get/${period}?filter=${filter}`)
     }
     static addIncome(date, reason, category, subCategory, description, amount, payMode) {
         return Base.post('income/add', {

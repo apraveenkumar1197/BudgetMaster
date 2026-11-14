@@ -83,7 +83,7 @@ Route::middleware(['auth:api'])->group(function () {
         Route::post('add', [IncomeController::class, 'add']);
         Route::put('{id}/update', [IncomeController::class, 'update']);
         Route::delete('{id}', [IncomeController::class, 'delete']);
-        Route::get('get/{month}', [IncomeController::class, 'getByMonth']);
+        Route::get('get/{period}', [IncomeController::class, 'list']);
         Route::get('report/individual', [IncomeController::class, 'individualReport']);
         Route::get('fillable', [IncomeController::class, 'fillable']);
     });
